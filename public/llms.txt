@@ -1,3 +1,16 @@
-# VeritasAI
+# VeritasAI - Autonomous Real-Time Truth & Evidence Verification System
 
-VeritasAI Truth Intelligence System - Autonomous Claim Verification by Adam Gierczak. Powered by NVIDIA Nemotron & Tavily Search API.
+> VeritasAI is an autonomous truth verification research agent created by Adam Gierczak. Powered by NVIDIA Nemotron on Nebius Token Factory with real-time grounding via Tavily Search API.
+
+## Core Capabilities
+- Real-time fact inspection and claim verification
+- Multi-source evidence grounding and hallucination reduction
+- Synthetic confidence scoring (0-100%) and bias detection
+- Structured verification dossiers and intelligence export
+
+## Links and Resources
+- [Main Application Console](https://veritas-io.netlify.app/): Live truth verification interface and interactive workspace.
+- [Chat & Verification API](https://veritas-io.netlify.app/api/chat): Next.js Route Handler for agentic verification and claim inference.
+- [GitHub Repository](https://github.com/AdamBabinicz/veritas): Source code, system architecture, and deployment instructions.
+- [Nebius Token Factory](https://studio.nebius.ai/): High-throughput cloud inference infrastructure running NVIDIA Nemotron models.
+- [Tavily AI Search](https://tavily.com/): Real-time web search API optimized for LLMs and grounded claim validation.

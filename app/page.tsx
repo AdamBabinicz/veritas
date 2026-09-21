@@ -361,7 +361,10 @@ export default function Page() {
                 ))}
               </div>
             )}
-            <button className="grid size-9 place-items-center rounded-lg border border-border text-muted-foreground lg:hidden">
+            <button
+              aria-label="Open mobile navigation menu"
+              className="grid size-9 place-items-center rounded-lg border border-border text-muted-foreground lg:hidden"
+            >
               <Menu className="size-4" />
             </button>
           </div>
@@ -479,7 +482,12 @@ export default function Page() {
                     />
                     <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
                       <div className="flex flex-wrap items-center gap-2">
+                        <label htmlFor="domain-select" className="sr-only">
+                          Select domain category
+                        </label>
                         <select
+                          id="domain-select"
+                          aria-label="Select domain category"
                           value={domain}
                           onChange={(e) => setDomain(Number(e.target.value))}
                           className="rounded-lg border border-border bg-muted px-3 py-2 text-[10px] text-muted-foreground outline-none"
