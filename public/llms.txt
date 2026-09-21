@@ -1,0 +1,3 @@
+# VeritasAI
+
+VeritasAI Truth Intelligence System - Autonomous Claim Verification by Adam Gierczak. Powered by NVIDIA Nemotron & Tavily Search API.
