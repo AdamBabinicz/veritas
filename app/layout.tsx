@@ -18,6 +18,19 @@ export const metadata: Metadata = {
   alternates: {
     canonical: siteUrl,
   },
+  keywords: [
+    "VeritasAI",
+    "NVIDIA Nemotron",
+    "Llama-3.1-Nemotron-70B",
+    "Nebius Token Factory",
+    "Tavily Search Grounding",
+    "Fact-Checking AI",
+    "Autonomous Verification",
+    "Truth Intelligence",
+  ],
+  authors: [{ name: "Adam Gierczak" }],
+  creator: "Adam Gierczak",
+  publisher: "VeritasAI",
   robots:
     "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
   openGraph: {
@@ -62,11 +75,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
       </head>
-      <body className="antialiased">{children}</body>
+      <body className="min-h-screen bg-background text-foreground antialiased selection:bg-emerald-500/20">
+        {children}
+      </body>
     </html>
   );
 }

@@ -11,6 +11,10 @@ export const translations = {
       cases: "Case studies",
       language: "Language",
       theme: "Toggle theme",
+      openMenu: "Open mobile navigation menu",
+      polish: "Polski",
+      english: "English",
+      engineBadge: "Nemotron-4",
     },
     common: {
       scrollToTop: "Scroll to top",
@@ -88,6 +92,11 @@ export const translations = {
       tabs: ["Paste text", "Input URL", "Social post"],
       urlPlaceholder: "Paste an article URL to investigate…",
       textPlaceholder: "Paste a claim, article, or social post…",
+      sampleUrl: "https://www.reuters.com/world/",
+      socialPlatforms: ["X / Twitter", "Threads", "Facebook", "TikTok"],
+      socialPlaceholder:
+        "@handle or post URL (e.g. https://x.com/user/status/...)",
+      selectDomainAria: "Select domain category",
       domains: [
         "Healthcare & science",
         "Politics & elections",
@@ -98,6 +107,33 @@ export const translations = {
       reasoning: "Agent is reasoning…",
       claims: "claims",
       charCount: "characters",
+      jurySectionTitle: "Quick inspection prompts for hackathon jury:",
+      juryPrompts: [
+        {
+          category: "Viral Medical Myth",
+          label: "Vitamin C Mega-dose Claim",
+          domainIndex: 0,
+          text: "A new clinical report proves that oral vitamin C doses exceeding 10,000 mg completely cure acute viral lung infections and replace antibiotic treatment.",
+        },
+        {
+          category: "NVIDIA & Nebius Tech",
+          label: "Nemotron-70B Alignment",
+          domainIndex: 0,
+          text: "NVIDIA Llama-3.1-Nemotron-70B-Instruct was specifically fine-tuned using RLHF and RLAIF to outperform standard foundation models on reasoning and truthful synthesis benchmarks.",
+        },
+        {
+          category: "Market & Clean Tech",
+          label: "AI Data Centers & Nuclear SMR",
+          domainIndex: 2,
+          text: "Global AI data center electricity demand will drive over 50 gigawatts of dedicated nuclear SMR procurement agreements by major tech hyperscalers before 2030.",
+        },
+        {
+          category: "Policy & AI Governance",
+          label: "EU AI Act GPAI Compliance",
+          domainIndex: 1,
+          text: "The European Union AI Act mandates stringent systemic risk evaluations, copyright transparency, and red-teaming for all general-purpose AI models operating in the EU in 2026.",
+        },
+      ],
     },
     pipeline: {
       title: "Agent pipeline",
@@ -145,6 +181,16 @@ export const translations = {
       grounding: "real-time web grounding enabled",
       backed: "evidence-backed report",
       rerun: "Re-run with deep search",
+    },
+    exportReport: {
+      header: "VeritasAI Verification Report",
+      generated: "Generated",
+      claim: "Investigated Claim",
+      trustScore: "Trust Score",
+      verdict: "Verdict",
+      analysis: "Evidence Analysis",
+      sources: "Grounded Tavily Sources",
+      cardCopyPrefix: "VeritasAI",
     },
     footer: {
       system: "VERITASAI / TRUTH INTELLIGENCE SYSTEM",
@@ -249,6 +295,10 @@ export const translations = {
       cases: "Studia przypadków",
       language: "Język",
       theme: "Przełącz motyw",
+      openMenu: "Otwórz menu mobilne",
+      polish: "Polski",
+      english: "English",
+      engineBadge: "Nemotron-4",
     },
     common: {
       scrollToTop: "Przewiń do góry",
@@ -329,6 +379,11 @@ export const translations = {
       tabs: ["Wklej tekst", "Wprowadź URL", "Post społecznościowy"],
       urlPlaceholder: "Wklej URL artykułu do zbadania…",
       textPlaceholder: "Wklej twierdzenie, artykuł lub post…",
+      sampleUrl: "https://www.reuters.com/world/",
+      socialPlatforms: ["X / Twitter", "Threads", "Facebook", "TikTok"],
+      socialPlaceholder:
+        "@nazwa_użytkownika lub URL wpisu (np. https://x.com/...)",
+      selectDomainAria: "Wybierz kategorię domeny",
       domains: [
         "Zdrowie i nauka",
         "Polityka i wybory",
@@ -339,6 +394,33 @@ export const translations = {
       reasoning: "Agent analizuje…",
       claims: "znaków",
       charCount: "znaków",
+      jurySectionTitle: "Szybkie prompty testowe dla sędziów:",
+      juryPrompts: [
+        {
+          category: "Wirusowy Mit Medyczny",
+          label: "Megadawki witaminy C",
+          domainIndex: 0,
+          text: "Nowy raport kliniczny dowodzi, że doustne dawki witaminy C powyżej 10 000 mg całkowicie leczą ostre infekcje płuc i zastępują leczenie antybiotykami.",
+        },
+        {
+          category: "Technologia NVIDIA & Nebius",
+          label: "Wyrównanie Nemotron-70B",
+          domainIndex: 0,
+          text: "Model NVIDIA Llama-3.1-Nemotron-70B-Instruct został precyzyjnie dostrojony przy użyciu technik RLHF i RLAIF, aby przewyższać standardowe modele bazowe w testach wnioskowania i syntezy prawdy.",
+        },
+        {
+          category: "Rynek & Czysta Energia",
+          label: "Centra Danych AI i Reaktory SMR",
+          domainIndex: 2,
+          text: "Globalne zapotrzebowanie centrów danych AI na energię elektryczną wymusi podpisanie przez gigantów technologicznych umów na ponad 50 GW mocy z reaktorów jądrowych SMR przed 2030 rokiem.",
+        },
+        {
+          category: "Regulacje & AI Governance",
+          label: "Zgodność z EU AI Act (GPAI)",
+          domainIndex: 1,
+          text: "Unijny AI Act nakłada na wszystkich dostawców modeli AI ogólnego przeznaczenia (GPAI) działających w UE w 2026 roku obowiązek audytu ryzyka systemowego, transparentności praw autorskich i testów red-team.",
+        },
+      ],
     },
     pipeline: {
       title: "Potok agenta",
@@ -386,6 +468,16 @@ export const translations = {
       grounding: "weryfikacja sieciowa w czasie rzeczywistym",
       backed: "raport oparty na dowodach",
       rerun: "Uruchom ponownie z głębokim wyszukiwaniem",
+    },
+    exportReport: {
+      header: "Raport Weryfikacyjny VeritasAI",
+      generated: "Wygenerowano",
+      claim: "Badane twierdzenie",
+      trustScore: "Wskaźnik zaufania",
+      verdict: "Werdykt",
+      analysis: "Analiza dowodowa",
+      sources: "Ugruntowane źródła Tavily",
+      cardCopyPrefix: "VeritasAI",
     },
     footer: {
       system: "VERITASAI / SYSTEM INTELIGENCJI PRAWDY",

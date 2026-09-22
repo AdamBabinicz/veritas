@@ -3,10 +3,14 @@
 import React, { useState } from "react";
 import {
   AlertTriangle,
+  ArrowUpRight,
   Check,
+  Cpu,
   Eye,
+  Globe2,
   Radio,
   Search,
+  ShieldCheck,
   TrendingUp,
   Wifi,
   Zap,
@@ -37,12 +41,14 @@ export function MiniStat({
   label: string;
 }) {
   return (
-    <div className="rounded-lg border border-border bg-muted/40 p-2.5 text-emerald-600">
+    <div className="rounded-xl border border-border bg-card/60 p-3 text-emerald-600 transition-all hover:border-emerald-500/30">
       <div className="flex items-center justify-between">
-        <span className="text-lg font-medium">{value}</span>
-        <span className="[&>svg]:size-3">{icon}</span>
+        <span className="text-lg font-semibold text-foreground">{value}</span>
+        <span className="flex size-6 items-center justify-center rounded-md bg-emerald-500/10 text-emerald-500 [&>svg]:size-3.5">
+          {icon}
+        </span>
       </div>
-      <div className="mt-1 text-[9px] uppercase tracking-wider text-muted-foreground">
+      <div className="mt-1.5 text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
         {label}
       </div>
     </div>
@@ -61,10 +67,11 @@ export function ViewShell({
   return (
     <section className="py-10 lg:py-14">
       <div className="mb-8">
-        <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.22em] text-emerald-600">
+        <p className="mb-3 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-emerald-500">
+          <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
           {eyebrow}
         </p>
-        <h1 className="text-4xl font-semibold tracking-[-0.05em] sm:text-5xl">
+        <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
           {title}
         </h1>
       </div>
@@ -89,32 +96,32 @@ export function InvestigationsView({
   }) => void;
 }) {
   const [activeCategory, setActiveCategory] = useState(0);
-  const rows = [
-    {
-      caseIndex: 0,
-      name: t.claims[0].label,
-      status: "Verified",
-      date: t.views.dateFormat[0],
-      category: t.dispatch.domains[0],
-      score: "76%",
-    },
-    {
-      caseIndex: 1,
-      name: t.claims[1].label,
-      status: "Misleading",
-      date: t.views.dateFormat[1],
-      category: t.dispatch.domains[2],
-      score: "42%",
-    },
-    {
-      caseIndex: 2,
-      name: t.claims[2].label,
-      status: "Debunked",
-      date: t.views.dateFormat[2],
-      category: t.dispatch.domains[1],
-      score: "12%",
-    },
-  ];
+
+  // Dynamiczne mapowanie na podstawie słownika t.claims z bezpiecznymi wartościami domyślnymi
+  const rows = (t.claims || []).map((claim, index) => {
+    const statuses = ["Verified", "Misleading", "Debunked"];
+    const scores = ["76%", "42%", "12%", "88%", "94%"];
+    const assignedStatus = statuses[index % statuses.length];
+    const assignedDate =
+      (t.views.dateFormat &&
+        t.views.dateFormat[index % t.views.dateFormat.length]) ||
+      "Dzisiaj, 14:32 UTC";
+    const assignedCategory =
+      (t.dispatch.domains &&
+        t.dispatch.domains[index % t.dispatch.domains.length]) ||
+      t.dispatch.domains[0];
+    const assignedScore = scores[index % scores.length];
+
+    return {
+      caseIndex: index,
+      name: claim.label,
+      status: assignedStatus,
+      date: assignedDate,
+      category: assignedCategory,
+      score: assignedScore,
+    };
+  });
+
   const labels = [
     t.views.recentCases,
     t.views.status,
@@ -142,60 +149,80 @@ export function InvestigationsView({
           <button
             key={category}
             onClick={() => setActiveCategory(i)}
-            className={`cursor-pointer rounded-full border px-3 py-1.5 text-[10px] transition-all hover:border-primary hover:bg-primary hover:text-primary-foreground ${
+            className={`cursor-pointer rounded-full border px-3.5 py-1.5 text-xs font-medium transition-all ${
               activeCategory === i
-                ? "border-emerald-500 bg-emerald-500/10 text-emerald-600"
-                : "border-border text-muted-foreground"
+                ? "border-emerald-500/80 bg-emerald-500/10 text-emerald-400 shadow-xs"
+                : "border-border bg-card/40 text-muted-foreground hover:border-border/80 hover:text-foreground"
             }`}
           >
             {category}
           </button>
         ))}
       </div>
-      <div className="overflow-hidden rounded-2xl border border-border bg-card">
-        <div className="grid grid-cols-[1.6fr_0.7fr_1fr_0.8fr_0.6fr_0.8fr] gap-3 border-b border-border px-5 py-3 text-[9px] uppercase tracking-widest text-muted-foreground">
-          {labels.map((label) => (
-            <span key={label}>{label}</span>
-          ))}
-        </div>
-        {rows
-          .filter(
-            (row) =>
-              activeCategory === 0 ||
-              row.category === t.dispatch.domains[activeCategory - 1],
-          )
-          .map((row) => (
-            <div
-              key={row.name}
-              className="grid cursor-pointer grid-cols-[1.6fr_0.7fr_1fr_0.8fr_0.6fr_0.8fr] items-center gap-3 border-b border-border px-5 py-4 text-[11px] transition-all last:border-0 hover:bg-muted/50"
-              onClick={() => onOpenDossier(row)}
-            >
-              <span className="font-medium text-foreground">{row.name}</span>
-              <span
-                className={`w-fit rounded-full px-2 py-1 text-[9px] ${
-                  row.status === "Verified"
-                    ? "bg-emerald-500/10 text-emerald-600"
-                    : row.status === "Misleading"
-                      ? "bg-amber-500/10 text-amber-600"
-                      : "bg-rose-500/10 text-rose-600"
-                }`}
-              >
-                {localeStatus(row.status)}
-              </span>
-              <span className="text-muted-foreground">{row.category}</span>
-              <span className="text-muted-foreground">{row.date}</span>
-              <span className="text-foreground">{row.score}</span>
-              <button
-                className="w-fit cursor-pointer rounded-lg border border-border px-2 py-1.5 text-[9px] text-muted-foreground transition-all hover:border-primary/50 hover:text-foreground"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onOpenDossier(row);
-                }}
-              >
-                {labels[5]}
-              </button>
+
+      <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-xs">
+        <div className="overflow-x-auto">
+          <div className="min-w-[680px]">
+            <div className="grid grid-cols-[1.6fr_0.8fr_1fr_0.8fr_0.6fr_0.8fr] gap-3 border-b border-border bg-muted/20 px-5 py-3.5 text-[9px] font-semibold uppercase tracking-widest text-muted-foreground">
+              {labels.map((label) => (
+                <span key={label}>{label}</span>
+              ))}
             </div>
-          ))}
+
+            <div className="divide-y divide-border">
+              {rows
+                .filter(
+                  (row) =>
+                    activeCategory === 0 ||
+                    row.category === t.dispatch.domains[activeCategory - 1],
+                )
+                .map((row) => (
+                  <div
+                    key={`${row.caseIndex}-${row.name}`}
+                    className="grid cursor-pointer grid-cols-[1.6fr_0.8fr_1fr_0.8fr_0.6fr_0.8fr] items-center gap-3 px-5 py-4 text-xs transition-colors hover:bg-muted/40"
+                    onClick={() => onOpenDossier(row)}
+                  >
+                    <span className="font-medium text-foreground line-clamp-1">
+                      {row.name}
+                    </span>
+                    <span>
+                      <span
+                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${
+                          row.status === "Verified"
+                            ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+                            : row.status === "Misleading"
+                              ? "border border-amber-500/30 bg-amber-500/10 text-amber-400"
+                              : "border border-rose-500/30 bg-rose-500/10 text-rose-400"
+                        }`}
+                      >
+                        {localeStatus(row.status)}
+                      </span>
+                    </span>
+                    <span className="text-muted-foreground">
+                      {row.category}
+                    </span>
+                    <span className="text-muted-foreground">{row.date}</span>
+                    <span className="font-semibold text-foreground">
+                      {row.score}
+                    </span>
+                    <div>
+                      <button
+                        type="button"
+                        className="inline-flex items-center gap-1 rounded-lg border border-border bg-card px-2.5 py-1 text-[10px] font-medium text-muted-foreground transition-all hover:border-emerald-500/50 hover:text-foreground cursor-pointer"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          onOpenDossier(row);
+                        }}
+                      >
+                        <span>{labels[5]}</span>
+                        <ArrowUpRight className="size-3" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+        </div>
       </div>
     </ViewShell>
   );
@@ -222,35 +249,35 @@ export function InteractiveRepositoryView({
 }) {
   const [selected, setSelected] = useState<number | null>(null);
 
-  const records = [
-    {
-      title: t.claims[0].label,
-      tag: t.views.tags[0],
-      result: "76%",
-      status: t.views.verified,
-      excerpt: t.claims[0].text,
+  const records = (t.claims || []).map((claim, index) => {
+    const tags = t.views.tags || [
+      "Zdrowie",
+      "Finanse",
+      "Technologia",
+      "Polityka",
+    ];
+    const results = ["76%", "42%", "12%", "89%"];
+    const statuses = [
+      t.views.verified,
+      t.views.misleading,
+      t.views.debunked,
+      t.views.verified,
+    ];
+
+    return {
+      title: claim.label,
+      tag: tags[index % tags.length],
+      result: results[index % results.length],
+      status: statuses[index % statuses.length],
+      excerpt: claim.text,
       analysis: t.report.dossierText,
-      sources: t.sourcesList as unknown as string[],
-    },
-    {
-      title: t.claims[1].label,
-      tag: t.views.tags[1],
-      result: "42%",
-      status: t.views.misleading,
-      excerpt: t.claims[1].text,
-      analysis: t.report.dossierText,
-      sources: t.sourcesList as unknown as string[],
-    },
-    {
-      title: t.claims[2].label,
-      tag: t.views.tags[2],
-      result: "12%",
-      status: t.views.debunked,
-      excerpt: t.claims[2].text,
-      analysis: t.report.dossierText,
-      sources: t.sourcesList as unknown as string[],
-    },
-  ];
+      sources: (t.sourcesList as unknown as string[]) || [
+        "PubMed Central (PMC)",
+        "Reuters Fact Check",
+        "CDC Guidelines",
+      ],
+    };
+  });
 
   const normalized = search.trim().toLowerCase();
   const recordsFound = records.filter(
@@ -284,8 +311,9 @@ export function InteractiveRepositoryView({
           label={t.views.groundingPrecision}
         />
       </div>
-      <div className="mb-3 flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-3">
-        <Search className="size-4 text-muted-foreground" />
+
+      <div className="mb-3 flex items-center gap-2.5 rounded-xl border border-border bg-card px-4 py-3 shadow-xs focus-within:border-emerald-500/50">
+        <Search className="size-4 text-muted-foreground shrink-0" />
         <input
           aria-label={t.views.searchClaims}
           value={search}
@@ -294,45 +322,61 @@ export function InteractiveRepositoryView({
           placeholder={t.views.searchClaims}
         />
       </div>
-      <div className="mb-5 flex flex-wrap gap-2">
+
+      <div className="mb-6 flex flex-wrap gap-2">
         {t.views.tags.map((tag) => (
           <button
             key={tag}
-            onClick={() => setSearch(tag)}
-            className={`rounded-full border px-3 py-1.5 text-[10px] transition ${
+            onClick={() => setSearch(search === tag ? "" : tag)}
+            className={`cursor-pointer rounded-full border px-3 py-1 text-xs font-medium transition-all ${
               search === tag
-                ? "border-emerald-500 bg-emerald-500/10 text-emerald-600"
-                : "border-border text-muted-foreground hover:border-emerald-500/60 hover:text-foreground"
+                ? "border-emerald-500/80 bg-emerald-500/10 text-emerald-400 shadow-xs"
+                : "border-border bg-card/40 text-muted-foreground hover:border-border/80 hover:text-foreground"
             }`}
           >
             {tag}
           </button>
         ))}
       </div>
+
       {recordsFound.length ? (
-        <div className="grid gap-3 md:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {recordsFound.map((record) => {
             const index = records.indexOf(record);
             return (
               <button
                 key={record.title}
                 onClick={() => setSelected(index)}
-                className="group cursor-pointer rounded-2xl border border-border bg-card p-5 text-left transition-all hover:-translate-y-0.5 hover:border-emerald-500/60 hover:shadow-xl hover:shadow-emerald-500/5"
+                className="group flex flex-col justify-between cursor-pointer rounded-2xl border border-border bg-card p-5 text-left transition-all hover:-translate-y-0.5 hover:border-emerald-500/50 hover:shadow-lg hover:shadow-emerald-500/5"
               >
-                <div className="mb-7 flex items-center justify-between">
-                  <span className="rounded-full bg-emerald-500/10 px-2 py-1 text-[9px] text-emerald-600">
-                    {record.tag}
-                  </span>
-                  <Eye className="size-4 text-muted-foreground transition group-hover:text-emerald-500" />
+                <div>
+                  <div className="mb-4 flex items-center justify-between">
+                    <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-semibold text-emerald-400">
+                      {record.tag}
+                    </span>
+                    <span className="flex items-center gap-1 text-xs text-muted-foreground transition group-hover:text-emerald-400">
+                      <Eye className="size-3.5" />
+                      <span className="text-[10px] font-medium">Dossier</span>
+                    </span>
+                  </div>
+                  <h3 className="text-sm font-semibold leading-snug text-foreground group-hover:text-emerald-300 transition-colors line-clamp-2">
+                    {record.title}
+                  </h3>
+                  <p className="mt-2 text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                    {record.excerpt}
+                  </p>
                 </div>
-                <h3 className="text-sm font-medium leading-5">
-                  {record.title}
-                </h3>
-                <div className="mt-5 flex items-end justify-between border-t border-border pt-3">
-                  <span className="text-[9px] uppercase tracking-widest text-muted-foreground">
-                    {t.report.confidence}
-                  </span>
-                  <strong className="text-lg text-emerald-600">
+
+                <div className="mt-5 flex items-end justify-between border-t border-border pt-3.5">
+                  <div>
+                    <span className="text-[9px] uppercase tracking-widest text-muted-foreground block">
+                      {t.report.confidence}
+                    </span>
+                    <span className="text-[10px] text-muted-foreground font-medium">
+                      {record.status}
+                    </span>
+                  </div>
+                  <strong className="text-xl font-bold text-emerald-400">
                     {record.result}
                   </strong>
                 </div>
@@ -345,6 +389,7 @@ export function InteractiveRepositoryView({
           {t.views.searchClaims}
         </div>
       )}
+
       {activeRecord && (
         <DossierModal
           t={t}
@@ -363,18 +408,23 @@ export function InteractiveRepositoryView({
 export function ApiStatusView({ t }: { t: Dictionary; locale: Locale }) {
   const services = [
     {
-      name: "NVIDIA Nemotron-4",
-      detail: "Nebius Token Factory",
+      name: "NVIDIA Llama-3.1-Nemotron-70B-Instruct",
+      provider: "Nebius Token Factory",
+      detail: "Inference Cluster H100 SXM5 · Zero Data Retention",
       latency: "218 ms",
       throughput: "1,842 tok/s",
+      icon: <Cpu className="size-4 text-emerald-400" />,
     },
     {
       name: "Tavily Web Grounding Engine",
+      provider: "Tavily Search API",
       detail: t.views.realTimeRetrieval,
       latency: "482 ms",
-      throughput: "12.4k domains",
+      throughput: "12.4k domen",
+      icon: <Globe2 className="size-4 text-emerald-400" />,
     },
   ];
+
   const telemetryHeights = [
     "h-[38%]",
     "h-[54%]",
@@ -413,25 +463,37 @@ export function ApiStatusView({ t }: { t: Dictionary; locale: Locale }) {
           label={t.views.operationalChecks}
         />
       </div>
+
       <div className="grid gap-4 lg:grid-cols-2">
         {services.map((service) => (
           <article
             key={service.name}
-            className="rounded-2xl border border-border bg-card p-5"
+            className="rounded-2xl border border-border bg-card p-5 shadow-xs"
           >
             <div className="flex items-start justify-between gap-3">
-              <div>
-                <h3 className="text-sm font-medium">{service.name}</h3>
-                <p className="mt-1 text-[10px] text-muted-foreground">
-                  {service.detail}
-                </p>
+              <div className="flex items-start gap-3">
+                <div className="flex size-8 items-center justify-center rounded-lg border border-emerald-500/20 bg-emerald-500/10 shrink-0">
+                  {service.icon}
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-foreground">
+                    {service.name}
+                  </h3>
+                  <p className="text-[11px] text-emerald-500 font-medium">
+                    {service.provider}
+                  </p>
+                  <p className="mt-1 text-[10px] text-muted-foreground">
+                    {service.detail}
+                  </p>
+                </div>
               </div>
-              <span className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2 py-1 text-[9px] text-emerald-600">
-                <span className="size-1.5 rounded-full bg-emerald-500" />
+              <span className="flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-[9px] font-semibold text-emerald-400 shrink-0">
+                <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 {t.views.operational}
               </span>
             </div>
-            <div className="mt-7 grid grid-cols-2 gap-3 border-t border-border pt-4">
+
+            <div className="mt-6 grid grid-cols-2 gap-3 border-t border-border pt-4">
               <Metric value={service.latency} label={t.views.latency} />
               <Metric
                 value={service.throughput}
@@ -445,16 +507,25 @@ export function ApiStatusView({ t }: { t: Dictionary; locale: Locale }) {
           </article>
         ))}
       </div>
-      <div className="mt-4 rounded-2xl border border-border bg-card p-5">
+
+      <div className="mt-4 rounded-2xl border border-border bg-card p-5 shadow-xs">
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-sm font-medium">{t.views.globalTelemetry}</h3>
-          <span className="text-[10px] text-emerald-600">{t.views.live}</span>
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="size-4 text-emerald-500" />
+            <h3 className="text-sm font-semibold text-foreground">
+              {t.views.globalTelemetry}
+            </h3>
+          </div>
+          <span className="flex items-center gap-1.5 text-[10px] font-semibold text-emerald-400">
+            <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            {t.views.live}
+          </span>
         </div>
-        <div className="flex h-24 items-end gap-1">
+        <div className="flex h-24 items-end gap-1.5 pt-2">
           {telemetryHeights.map((heightClass, index) => (
             <span
               key={index}
-              className={`flex-1 rounded-t bg-emerald-400/60 transition-all hover:bg-emerald-400 ${heightClass}`}
+              className={`flex-1 rounded-t bg-emerald-500/40 transition-all hover:bg-emerald-400 ${heightClass}`}
             />
           ))}
         </div>
