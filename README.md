@@ -1,11 +1,14 @@
 # VeritasAI — Autonomous Evidence-Based Verification & Truth Intelligence
 
+English | [Polski](README.pl.md)
+
 [![Next.js](https://img.shields.io/badge/Next.js-16.3-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![NVIDIA Nemotron](https://img.shields.io/badge/NVIDIA-Nemotron--70B-76B900?style=for-the-badge&logo=nvidia&logoColor=white)](https://build.nvidia.com/)
 [![Nebius Token Factory](https://img.shields.io/badge/Nebius-Token%20Factory-0B5FFF?style=for-the-badge&logo=nebius&logoColor=white)](https://nebius.com/)
 [![Tavily Search](https://img.shields.io/badge/Tavily-Search%20API-4A90D9?style=for-the-badge&logo=tavily&logoColor=white)](https://tavily.com/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-v4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![YouTube Demo](https://img.shields.io/badge/YouTube-Demo%20Walkthrough-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/DwpJtKu9bpA)
 
 > **"Separate signal from noise. VeritasAI is an autonomous fact-checking and truth-synthesis research console. It decomposes complex viral claims, grounds assertions with real-time web retrieval via Tavily, and generates calibrated confidence dossiers using NVIDIA Nemotron on Nebius Token Factory."**
 
@@ -13,10 +16,13 @@
 
 ## 1. Live Demo & Preview
 
-| Resource                 | Link                                                                                                                  |
-| :----------------------- | :-------------------------------------------------------------------------------------------------------------------- |
-| 🚀 **Live Deployment**   | [https://veritas-io.netlify.app/](https://veritas-io.netlify.app/)                                                    |
-| 📦 **Public Repository** | Public GitHub repository — source, issues and architecture notes are openly available for review and jury inspection. |
+| Resource                 | Link                                                                                 |
+| :----------------------- | :----------------------------------------------------------------------------------- |
+| 🚀 **Live Deployment**   | [https://veritas-io.netlify.app/](https://veritas-io.netlify.app/)                   |
+| 🎬 **Demo Video**        | [https://youtu.be/DwpJtKu9bpA](https://youtu.be/DwpJtKu9bpA) _(1.5 min walkthrough)_ |
+| 📦 **Public Repository** | [https://github.com/AdamBabinicz/veritas](https://github.com/AdamBabinicz/veritas)   |
+
+[![VeritasAI Demo Video](https://img.youtube.com/vi/DwpJtKu9bpA/maxresdefault.jpg)](https://youtu.be/DwpJtKu9bpA)
 
 > The hosted build is production-deployed on Netlify and runs the full four-stage agentic pipeline end-to-end. No local setup is required to evaluate the system.
 
@@ -113,8 +119,8 @@ Inference endpoints and external retrieval APIs can degrade under load. VeritasA
 ### Step 1 — Clone the repository
 
 ```bash
-git clone https://github.com/your-username/veritas-ai.git
-cd veritas-ai
+git clone https://github.com/AdamBabinicz/veritas.git
+cd veritas
 ```
 
 ### Step 2 — Install dependencies
