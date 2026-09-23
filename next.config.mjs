@@ -6,6 +6,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // Wyciszenie błędu Turbopack w Next.js 16 dla Netlify
+  turbopack: {},
   experimental: {
     serverActions: {
       allowedOrigins: ["*"],
