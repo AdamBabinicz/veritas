@@ -63,7 +63,6 @@ export default function Page() {
     useState<LoadedInvestigation | null>(null);
   const [dossierOpen, setDossierOpen] = useState(false);
 
-  // Bezpieczna inicjalizacja po stronie klienta: eliminuje hydration mismatch w dev
   useEffect(() => {
     setMounted(true);
     try {
@@ -73,11 +72,10 @@ export default function Page() {
         setConsentSeen(true);
       }
     } catch {
-      // ignorujemy błędy parsowania
+      // ignorujemy
     }
   }, []);
 
-  // Synchronizacja motywu dark z elementem <html>
   useEffect(() => {
     if (typeof document !== "undefined") {
       if (dark) {
@@ -271,7 +269,7 @@ export default function Page() {
       id="main-content"
       className={`${dark ? "dark" : ""} min-h-screen w-full bg-background text-foreground selection:bg-emerald-500/20`}
     >
-      {/* 100% niezawodny pasek nawigacji: fixed top-0, zawsze przyklejony */}
+      {/* Poprawny semantycznie nagłówek nadrzędny bez zagnieżdżania header w header */}
       <header className="fixed top-0 left-0 right-0 z-50 w-full border-b border-border/80 bg-background/90 backdrop-blur-md transition-colors">
         <div className="mx-auto max-w-[1500px] w-full px-4 sm:px-6 lg:px-10">
           <Header
@@ -384,8 +382,8 @@ export default function Page() {
             </div>
           </section>
 
-          {/* Główna sekcja operacyjna: Konsola zlecenia + Potok agenta */}
-          <section className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_330px] w-full min-w-0">
+          {/* Główna sekcja operacyjna: div zamiast section, bo nie ma bezpośredniego h2 */}
+          <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_330px] w-full min-w-0">
             <div className="min-w-0 max-w-full">
               <DispatchConsole
                 t={t}
@@ -412,7 +410,7 @@ export default function Page() {
                 logLines={logLines}
               />
             </div>
-          </section>
+          </div>
 
           {/* Disclaimer: wyraźny w obu motywach */}
           <p className="mt-3.5 text-center text-xs leading-5 text-zinc-600 dark:text-zinc-400 break-words">
@@ -463,7 +461,7 @@ export default function Page() {
           onOpenGovernance={() => setGovernanceOpen(true)}
         />
 
-        {/* Modale - renderowane po zamontowaniu na kliencie, bez ryzyka rozbieżności z SSR */}
+        {/* Modale */}
         {mounted && !consentSeen && (
           <ConsentBanner
             t={t}

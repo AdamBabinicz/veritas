@@ -47,7 +47,7 @@ export function Header({
   ];
 
   return (
-    <header className="relative flex min-h-[74px] items-center justify-between">
+    <div className="relative flex min-h-[74px] items-center justify-between">
       {/* Lewa strona: Logo VeritasAI + Nawigacja desktopowa */}
       <div className="flex items-center gap-8 min-w-0">
         <button
@@ -58,13 +58,13 @@ export function Header({
             setMenuOpen(false);
           }}
         >
-          <div className="relative grid size-9 place-items-center rounded-xl border border-emerald-500/40 bg-emerald-500/15 shadow-xs shrink-0">
+          <span className="relative grid size-9 place-items-center rounded-xl border border-emerald-500/40 bg-emerald-500/15 shadow-xs shrink-0">
             <ShieldCheck
               className="size-[19px] text-emerald-600 dark:text-emerald-400"
               strokeWidth={2}
             />
             <span className="absolute right-1 top-1 size-1.5 animate-pulse rounded-full bg-emerald-500 dark:bg-emerald-400" />
-          </div>
+          </span>
           <span className="text-[17px] font-bold tracking-tight text-foreground whitespace-nowrap">
             Veritas
             <span className="text-emerald-600 dark:text-emerald-400">AI</span>
@@ -147,7 +147,7 @@ export function Header({
           )}
         </button>
 
-        {/* Menu próbek dla desktopu (na mobilu dostępne również wewnątrz szuflady) */}
+        {/* Menu próbek dla desktopu */}
         <div className="relative hidden sm:block">
           <button
             type="button"
@@ -184,7 +184,7 @@ export function Header({
           )}
         </div>
 
-        {/* Przycisk menu mobilnego (Hamburger) - gwarantowana widoczność na mobilu */}
+        {/* Przycisk menu mobilnego */}
         <button
           type="button"
           aria-label={menuOpen ? t.common.close : t.nav.openMenu}
@@ -199,10 +199,9 @@ export function Header({
         </button>
       </div>
 
-      {/* Rozwijane menu mobilne z pełną nawigacją i benchmarkami */}
+      {/* Rozwijane menu mobilne */}
       {menuOpen && (
         <div className="absolute left-0 right-0 top-full mt-1 z-50 rounded-2xl border border-border bg-popover/95 p-4 shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-2 duration-200 lg:hidden">
-          {/* Główne zakładki aplikacji */}
           <div className="space-y-1 border-b border-border pb-3">
             <p className="px-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
               Nawigacja
@@ -229,7 +228,6 @@ export function Header({
             ))}
           </div>
 
-          {/* Szybkie przypadki benchmarkowe */}
           <div className="pt-3">
             <p className="px-2 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
               {t.nav.cases}
@@ -254,6 +252,6 @@ export function Header({
           </div>
         </div>
       )}
-    </header>
+    </div>
   );
 }

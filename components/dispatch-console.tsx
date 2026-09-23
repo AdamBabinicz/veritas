@@ -221,7 +221,7 @@ export function DispatchConsole({
           ))}
         </div>
 
-        {/* Dedykowana sekcja z promptami dla jury hackathonu */}
+        {/* Dedykowana sekcja z wzorcowymi scenariuszami */}
         {t.dispatch.juryPrompts && t.dispatch.juryPrompts.length > 0 && (
           <div className="mt-5 rounded-xl border border-emerald-600/30 dark:border-emerald-500/30 bg-emerald-500/5 p-4">
             <p className="mb-2.5 text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
@@ -235,20 +235,20 @@ export function DispatchConsole({
                   onClick={() =>
                     handleSelectJuryPrompt(item.text, item.domainIndex)
                   }
-                  className="group rounded-lg border border-border bg-card p-3 text-left transition-all hover:border-emerald-500/60 hover:bg-muted/50 cursor-pointer"
+                  className="group rounded-lg border border-border bg-card p-3 text-left transition-all hover:border-emerald-500/60 hover:bg-muted/50 cursor-pointer block w-full"
                 >
-                  <div className="flex items-center justify-between">
+                  <span className="flex items-center justify-between">
                     <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">
                       {item.category}
                     </span>
                     <ArrowUpRight className="size-3 text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </div>
-                  <div className="mt-1 text-xs font-semibold text-foreground group-hover:text-emerald-600 dark:group-hover:text-emerald-300 transition-colors line-clamp-1">
+                  </span>
+                  <span className="mt-1 block text-xs font-semibold text-foreground group-hover:text-emerald-600 dark:group-hover:text-emerald-300 transition-colors line-clamp-1">
                     {item.label}
-                  </div>
-                  <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-300 line-clamp-2 leading-relaxed">
+                  </span>
+                  <span className="mt-1 block text-xs text-zinc-600 dark:text-zinc-300 line-clamp-2 leading-relaxed font-normal">
                     {item.text}
-                  </p>
+                  </span>
                 </button>
               ))}
             </div>
