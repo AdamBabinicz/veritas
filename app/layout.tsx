@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import "./globals.css";
 
 const siteUrl = "https://veritas-io.netlify.app/";
 const shareImage = "/og-image.jpg";
+const GA_MEASUREMENT_ID = "G-5B1P108Z2D";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -163,6 +165,29 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark overflow-x-hidden" suppressHydrationWarning>
+      <head>
+        {/* Google tag (gtag.js) z obsługą Consent Mode */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            // Domyślny stan zgodności Consent Mode v2
+            gtag('consent', 'default', {
+              'analytics_storage': 'granted'
+            });
+
+            gtag('config', '${GA_MEASUREMENT_ID}', {
+              page_path: window.location.pathname,
+            });
+          `}
+        </Script>
+      </head>
       <body
         className="min-h-screen w-full overflow-x-hidden bg-background text-foreground antialiased selection:bg-emerald-500/20"
         suppressHydrationWarning
