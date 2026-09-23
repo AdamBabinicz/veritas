@@ -239,7 +239,7 @@ export const translations = {
       marketing: "Marketing & third-party cookies",
       marketingDesc: "Personalization and partner measurement.",
       accept: "Accept all",
-      reject: "Reject non-essential",
+      reject: "Odrzuć opcjonalne",
       save: "Save preferences",
       manage: "Manage preferences",
       banner:
@@ -576,5 +576,7 @@ export const translations = {
 } as const;
 
 export type Dictionary = typeof translations.en;
-export const getDictionary = (locale: Locale): Dictionary =>
-  translations[locale] as Dictionary;
+
+export const getDictionary = (locale: Locale): Dictionary => {
+  return (translations[locale] ?? translations.en) as Dictionary;
+};

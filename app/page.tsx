@@ -22,6 +22,7 @@ import { Footer } from "@/components/footer";
 import { DispatchConsole } from "@/components/dispatch-console";
 import { PipelineTracker } from "@/components/pipeline-tracker";
 import { ReportView, type LoadedInvestigation } from "@/components/report-view";
+import { ScrollToTop } from "@/components/scroll-to-top";
 
 export default function Page() {
   const [locale, setLocale] = useState<Locale>("en");
@@ -263,9 +264,9 @@ export default function Page() {
   return (
     <main
       id="main-content"
-      className={`${dark ? "dark" : ""} min-h-screen bg-background text-foreground selection:bg-emerald-500/20`}
+      className={`${dark ? "dark" : ""} min-h-screen w-full overflow-x-hidden bg-background text-foreground selection:bg-emerald-500/20`}
     >
-      <div className="mx-auto max-w-[1500px] px-4 pb-16 sm:px-6 lg:px-10">
+      <div className="mx-auto max-w-[1500px] w-full px-4 pb-16 sm:px-6 lg:px-10">
         {/* Modularny Header */}
         <Header
           t={t}
@@ -422,6 +423,9 @@ export default function Page() {
             <span>{t.toast.complete}</span>
           </div>
         )}
+
+        {/* Pływający przycisk przewijania do góry */}
+        <ScrollToTop t={t} />
 
         {/* Modularny Footer */}
         <Footer
