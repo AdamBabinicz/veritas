@@ -85,6 +85,16 @@ export const metadata: Metadata = {
         sizes: "96x96",
         type: "image/png",
       },
+      {
+        url: "/web-app-manifest-192x192.png",
+        sizes: "192x192",
+        type: "image/png",
+      },
+      {
+        url: "/web-app-manifest-512x512.png",
+        sizes: "512x512",
+        type: "image/png",
+      },
     ],
     apple: [
       {
