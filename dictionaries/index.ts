@@ -107,7 +107,7 @@ export const translations = {
       reasoning: "Agent is reasoning…",
       claims: "claims",
       charCount: "characters",
-      jurySectionTitle: "Quick inspection prompts for hackathon jury:",
+      jurySectionTitle: "Featured Benchmark Scenarios:",
       juryPrompts: [
         {
           category: "Viral Medical Myth",
@@ -254,7 +254,8 @@ export const translations = {
         "No external data exported",
       ],
       deep: "Deep reasoning telemetry",
-      deepDesc: "Share detailed reasoning performance signals with the system.",
+      deepDesc:
+        "Udostępniaj systemowi szczegółowe sygnały wydajności rozumowania.",
       active: "Active consents",
       purge: "Purge local cache & session",
       purgeDone: "Local cache purged",
@@ -394,7 +395,7 @@ export const translations = {
       reasoning: "Agent analizuje…",
       claims: "znaków",
       charCount: "znaków",
-      jurySectionTitle: "Szybkie prompty testowe dla sędziów:",
+      jurySectionTitle: "Wzorcowe scenariusze weryfikacji:",
       juryPrompts: [
         {
           category: "Wirusowy Mit Medyczny",
