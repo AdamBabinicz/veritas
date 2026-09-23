@@ -51,15 +51,16 @@ export function Header({
           className="flex items-center gap-3 cursor-pointer"
           onClick={() => setActiveView(0)}
         >
-          <div className="relative grid size-9 place-items-center rounded-xl border border-emerald-400/40 bg-emerald-400/15 shadow-xs">
+          <div className="relative grid size-9 place-items-center rounded-xl border border-emerald-500/40 bg-emerald-500/15 shadow-xs">
             <ShieldCheck
-              className="size-[19px] text-emerald-400"
+              className="size-[19px] text-emerald-600 dark:text-emerald-400"
               strokeWidth={2}
             />
-            <span className="absolute right-1 top-1 size-1.5 animate-pulse rounded-full bg-emerald-400" />
+            <span className="absolute right-1 top-1 size-1.5 animate-pulse rounded-full bg-emerald-500 dark:bg-emerald-400" />
           </div>
           <span className="text-[17px] font-bold tracking-tight text-foreground">
-            Veritas<span className="text-emerald-400">AI</span>
+            Veritas
+            <span className="text-emerald-600 dark:text-emerald-400">AI</span>
           </span>
         </div>
 
@@ -72,10 +73,10 @@ export function Header({
               key={item}
               type="button"
               onClick={() => setActiveView(i)}
-              className={`cursor-pointer rounded-lg px-3.5 py-2 text-xs font-medium transition-all hover:brightness-110 active:scale-[0.98] ${
+              className={`cursor-pointer rounded-lg px-3.5 py-2 text-xs font-semibold transition-all hover:brightness-105 active:scale-[0.98] ${
                 activeView === i
-                  ? "bg-muted text-foreground font-semibold shadow-2xs border border-border/80"
-                  : "text-zinc-300 hover:bg-muted/70 hover:text-foreground"
+                  ? "bg-muted text-foreground font-bold shadow-2xs border border-border"
+                  : "text-zinc-600 hover:bg-muted hover:text-foreground dark:text-zinc-300"
               }`}
             >
               {item}
@@ -87,25 +88,25 @@ export function Header({
       {/* Prawa strona: Wskaźnik modelu, przełącznik języków, motyw, menu próbek */}
       <div className="flex items-center gap-2">
         {/* Pigułka silnika hackathonowego */}
-        <div className="hidden items-center gap-2 rounded-full border border-border/80 bg-muted/60 px-3 py-1.5 text-xs text-zinc-300 font-medium md:flex">
-          <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="font-semibold text-zinc-100">
-            {t.nav.engineBadge}
+        <div className="hidden items-center gap-2 rounded-full border border-border bg-card/80 px-3 py-1.5 text-xs text-zinc-700 font-medium dark:bg-muted/60 dark:text-zinc-300 md:flex">
+          <span className="size-2 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse" />
+          <span className="font-bold text-foreground">{t.nav.engineBadge}</span>
+          <span className="text-zinc-400 dark:text-zinc-500">·</span>
+          <span className="text-zinc-600 dark:text-zinc-300 font-medium">
+            {t.views.tavilyGrounded}
           </span>
-          <span className="text-zinc-500">·</span>
-          <span className="text-zinc-300">{t.views.tavilyGrounded}</span>
         </div>
 
         {/* Przełącznik języka PL / EN */}
-        <div className="flex items-center rounded-lg border border-border/80 bg-muted/60 text-xs font-semibold p-0.5">
+        <div className="flex items-center rounded-lg border border-border bg-card/80 text-xs font-semibold p-0.5 dark:bg-muted/60">
           <button
             type="button"
             aria-label={t.nav.polish}
             onClick={() => onSelectLocale("pl")}
             className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
               locale === "pl"
-                ? "bg-background text-emerald-400 font-bold shadow-2xs"
-                : "text-zinc-300 hover:text-foreground"
+                ? "bg-muted text-emerald-700 font-bold shadow-2xs dark:bg-background dark:text-emerald-400"
+                : "text-zinc-600 hover:text-foreground dark:text-zinc-300"
             }`}
           >
             PL
@@ -116,8 +117,8 @@ export function Header({
             onClick={() => onSelectLocale("en")}
             className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
               locale === "en"
-                ? "bg-background text-emerald-400 font-bold shadow-2xs"
-                : "text-zinc-300 hover:text-foreground"
+                ? "bg-muted text-emerald-700 font-bold shadow-2xs dark:bg-background dark:text-emerald-400"
+                : "text-zinc-600 hover:text-foreground dark:text-zinc-300"
             }`}
           >
             EN
@@ -129,12 +130,12 @@ export function Header({
           type="button"
           aria-label={t.nav.theme}
           onClick={onToggleDark}
-          className="grid size-9 place-items-center rounded-lg border border-border/80 bg-muted/60 text-zinc-200 transition-colors hover:text-foreground hover:bg-muted cursor-pointer"
+          className="grid size-9 place-items-center rounded-lg border border-border bg-card/80 text-zinc-700 transition-colors hover:bg-muted hover:text-foreground dark:bg-muted/60 dark:text-zinc-200 cursor-pointer"
         >
           {dark ? (
             <Sun className="size-4 text-zinc-200" />
           ) : (
-            <Moon className="size-4 text-zinc-200" />
+            <Moon className="size-4 text-zinc-700" />
           )}
         </button>
 
@@ -143,16 +144,16 @@ export function Header({
           <button
             type="button"
             onClick={() => setMenuOpen(!menuOpen)}
-            className="flex items-center gap-1.5 rounded-lg border border-border/80 bg-muted/60 px-3 py-2 text-xs font-medium text-zinc-200 transition-colors hover:text-foreground hover:bg-muted cursor-pointer"
+            className="flex items-center gap-1.5 rounded-lg border border-border bg-card/80 px-3 py-2 text-xs font-semibold text-zinc-700 transition-colors hover:bg-muted hover:text-foreground dark:bg-muted/60 dark:text-zinc-200 cursor-pointer"
           >
-            <BookOpen className="size-3.5 text-emerald-400" />
+            <BookOpen className="size-3.5 text-emerald-600 dark:text-emerald-400" />
             <span>{t.nav.samples}</span>
-            <ChevronDown className="size-3 text-zinc-400" />
+            <ChevronDown className="size-3 text-zinc-500 dark:text-zinc-400" />
           </button>
 
           {menuOpen && (
             <div className="absolute right-0 top-full mt-2 z-50 w-72 rounded-xl border border-border bg-popover p-2 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
-              <p className="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-widest text-zinc-300">
+              <p className="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-widest text-zinc-600 dark:text-zinc-300">
                 {t.nav.cases}
               </p>
               <div className="space-y-1">
@@ -165,7 +166,7 @@ export function Header({
                       setMenuOpen(false);
                       setActiveView(0);
                     }}
-                    className="block w-full rounded-lg px-2.5 py-2 text-left text-xs font-medium text-zinc-300 hover:bg-muted hover:text-foreground transition-colors cursor-pointer"
+                    className="block w-full rounded-lg px-2.5 py-2 text-left text-xs font-medium text-zinc-700 hover:bg-muted hover:text-foreground dark:text-zinc-300 transition-colors cursor-pointer"
                   >
                     {demo.label}
                   </button>
@@ -180,7 +181,7 @@ export function Header({
           type="button"
           aria-label={t.nav.openMenu}
           onClick={() => setMenuOpen(!menuOpen)}
-          className="grid size-9 place-items-center rounded-lg border border-border/80 text-zinc-300 lg:hidden cursor-pointer hover:text-foreground hover:bg-muted"
+          className="grid size-9 place-items-center rounded-lg border border-border text-zinc-700 lg:hidden cursor-pointer hover:bg-muted hover:text-foreground dark:text-zinc-300"
         >
           <Menu className="size-4" />
         </button>

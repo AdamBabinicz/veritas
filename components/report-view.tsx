@@ -79,19 +79,19 @@ export function ReportView({
       {/* Pasek nagłówkowy raportu z akcjami */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border px-5 py-4">
         <div>
-          <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-            <ClipboardCheck className="size-4 text-emerald-400" />
+          <div className="flex items-center gap-2 text-sm font-bold text-foreground">
+            <ClipboardCheck className="size-4 text-emerald-600 dark:text-emerald-400" />
             <h2
               id="report-section-heading"
-              className="text-sm font-semibold text-foreground"
+              className="text-sm font-bold text-foreground"
             >
               {t.report.title}
             </h2>
-            <span className="rounded bg-emerald-500/15 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-300 border border-emerald-500/20">
+            <span className="rounded bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold text-emerald-800 dark:text-emerald-300 border border-emerald-500/30">
               {t.report.report}
             </span>
           </div>
-          <p className="mt-1 text-xs text-zinc-300 line-clamp-1">
+          <p className="mt-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 line-clamp-1">
             {t.report.completed} · {claimText.slice(0, 52)}…
           </p>
         </div>
@@ -100,28 +100,28 @@ export function ReportView({
           <button
             type="button"
             onClick={onOpenDossier}
-            className="flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs font-medium text-emerald-300 transition-colors hover:bg-emerald-500/20 cursor-pointer"
+            className="flex items-center gap-1.5 rounded-lg border border-emerald-600/40 bg-emerald-500/10 px-3 py-2 text-xs font-bold text-emerald-800 hover:bg-emerald-500/20 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-300 transition-colors cursor-pointer"
           >
             {t.report.open}
           </button>
           <button
             type="button"
             onClick={copyCard}
-            className="flex items-center gap-1.5 rounded-lg border border-border/80 bg-background/80 px-3 py-2 text-xs font-medium text-zinc-200 transition-colors hover:text-foreground cursor-pointer"
+            className="flex items-center gap-1.5 rounded-lg border border-border bg-muted/60 px-3 py-2 text-xs font-semibold text-zinc-700 hover:bg-muted hover:text-foreground dark:bg-background/80 dark:text-zinc-200 transition-colors cursor-pointer"
           >
             {copied ? (
-              <Check className="size-3.5 text-emerald-400" />
+              <Check className="size-3.5 text-emerald-600 dark:text-emerald-400" />
             ) : (
-              <Copy className="size-3.5 text-zinc-300" />
+              <Copy className="size-3.5 text-zinc-600 dark:text-zinc-300" />
             )}
             <span>{copied ? t.report.copied : t.report.copy}</span>
           </button>
           <button
             type="button"
             onClick={exportDossier}
-            className="flex items-center gap-1.5 rounded-lg border border-border/80 bg-background/80 px-3 py-2 text-xs font-medium text-zinc-200 transition-all hover:border-emerald-500/50 hover:text-foreground active:scale-[0.98] cursor-pointer"
+            className="flex items-center gap-1.5 rounded-lg border border-border bg-muted/60 px-3 py-2 text-xs font-semibold text-zinc-700 hover:bg-muted hover:text-foreground dark:bg-background/80 dark:text-zinc-200 transition-all hover:border-emerald-500/50 active:scale-[0.98] cursor-pointer"
           >
-            <Download className="size-3.5 text-zinc-300" />
+            <Download className="size-3.5 text-zinc-600 dark:text-zinc-300" />
             <span>{exported ? t.views.downloaded : t.report.export}</span>
           </button>
         </div>
@@ -142,7 +142,7 @@ export function ReportView({
                 cx="80"
                 cy="80"
                 r={radius}
-                className="stroke-muted/50 fill-none"
+                className="stroke-muted fill-none"
                 strokeWidth="12"
               />
               {/* Pasek postępu */}
@@ -150,7 +150,7 @@ export function ReportView({
                 cx="80"
                 cy="80"
                 r={radius}
-                className="stroke-emerald-400 fill-none transition-all duration-1000 ease-out"
+                className="stroke-emerald-500 dark:stroke-emerald-400 fill-none transition-all duration-1000 ease-out"
                 strokeWidth="12"
                 strokeDasharray={circumference}
                 strokeDashoffset={strokeDashoffset}
@@ -159,20 +159,20 @@ export function ReportView({
             </svg>
 
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-              <span className="text-4xl font-bold tracking-tight text-foreground">
+              <span className="text-4xl font-extrabold tracking-tight text-foreground">
                 {score}%
               </span>
-              <span className="mt-0.5 text-xs font-semibold text-emerald-400">
+              <span className="mt-0.5 text-xs font-bold text-emerald-800 dark:text-emerald-400">
                 {scoreLabel}
               </span>
             </div>
           </div>
 
-          <p className="mt-3 text-xs font-medium uppercase tracking-wider text-zinc-300">
+          <p className="mt-3 text-xs font-bold uppercase tracking-wider text-zinc-600 dark:text-zinc-300">
             {t.report.confidence}
           </p>
-          <div className="mt-2 flex items-center gap-1.5 text-xs font-medium text-emerald-400">
-            <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
+          <div className="mt-2 flex items-center gap-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-400">
+            <span className="size-2 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse" />
             <span>{t.report.high}</span>
           </div>
         </div>
@@ -186,41 +186,43 @@ export function ReportView({
                   type="button"
                   key={filter}
                   onClick={() => setActiveFilter(i)}
-                  className={`rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+                  className={`rounded-md px-2.5 py-1.5 text-xs font-semibold transition-colors cursor-pointer ${
                     activeFilter === i
-                      ? "bg-muted text-foreground border border-border"
-                      : "text-zinc-400 hover:text-foreground"
+                      ? "bg-muted text-foreground border border-border shadow-2xs font-bold"
+                      : "text-zinc-600 hover:text-foreground dark:text-zinc-400"
                   }`}
                 >
                   {filter}
                 </button>
               ))}
             </div>
-            <span className="text-xs text-zinc-300 font-medium">
+            <span className="text-xs text-zinc-600 dark:text-zinc-300 font-semibold">
               {t.report.count}
             </span>
           </div>
 
           {/* Rozłożenie tekstu na kolorowane tezy atomowe */}
-          <div className="rounded-xl border border-border bg-background/80 p-4">
+          <div className="rounded-xl border border-border bg-background p-4">
             <div className="mb-3 flex items-center justify-between">
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-300">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-600 dark:text-zinc-300">
                 {t.report.inspector}
               </span>
-              <span className="text-xs text-zinc-400">{t.report.inspect}</span>
+              <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                {t.report.inspect}
+              </span>
             </div>
-            <p className="text-sm leading-7 text-zinc-200">
+            <p className="text-sm leading-7 text-zinc-800 dark:text-zinc-200">
               {parts.map((word, i) => {
                 const isVerified = i >= 2 && i <= 4;
                 const isMisleading = i >= 13 && i <= 16;
                 const isDebunked = i >= parts.length - 2;
 
                 const highlightClass = isVerified
-                  ? "cursor-pointer rounded bg-emerald-500/20 px-1 font-medium text-emerald-300 dark:text-emerald-300 border border-emerald-500/30"
+                  ? "cursor-pointer rounded bg-emerald-500/20 px-1 font-semibold text-emerald-900 border border-emerald-500/40 dark:text-emerald-300 dark:border-emerald-500/30"
                   : isMisleading
-                    ? "cursor-pointer rounded bg-amber-500/20 px-1 font-medium text-amber-300 dark:text-amber-200 border border-amber-500/30"
+                    ? "cursor-pointer rounded bg-amber-500/20 px-1 font-semibold text-amber-900 border border-amber-500/40 dark:text-amber-200 dark:border-amber-500/30"
                     : isDebunked
-                      ? "cursor-pointer rounded bg-rose-500/20 px-1 font-medium text-rose-300 dark:text-rose-200 border border-rose-500/30"
+                      ? "cursor-pointer rounded bg-rose-500/20 px-1 font-semibold text-rose-900 border border-rose-500/40 dark:text-rose-200 dark:border-rose-500/30"
                       : "";
 
                 return (
@@ -254,27 +256,27 @@ export function ReportView({
         </div>
 
         {/* Kolumna 3: Karta dossier z ugruntowanymi źródłami Tavily */}
-        <div className="rounded-xl border border-border bg-muted/30 p-4 flex flex-col justify-between">
+        <div className="rounded-xl border border-border bg-muted/40 p-4 flex flex-col justify-between">
           <div>
             <div className="mb-3 flex items-center justify-between">
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-300">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-600 dark:text-zinc-300">
                 {t.report.dossier}
               </span>
-              <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-semibold text-amber-300 border border-amber-500/30">
+              <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold text-amber-900 dark:text-amber-300 border border-amber-500/30">
                 {t.report.context}
               </span>
             </div>
-            <h3 className="text-sm font-semibold text-foreground line-clamp-2">
+            <h3 className="text-sm font-bold text-foreground line-clamp-2">
               {t.report.claim} {activeClaim + 1}:{" "}
               {investigation?.title ?? t.claims[0].label}
             </h3>
-            <p className="mt-2 text-xs leading-5 text-zinc-300">
+            <p className="mt-2 text-xs leading-5 text-zinc-700 dark:text-zinc-300 font-normal">
               {dossierAnalysis}
             </p>
           </div>
 
           <div className="mt-4 border-t border-border pt-3">
-            <p className="mb-2.5 text-[10px] font-semibold uppercase tracking-widest text-zinc-300">
+            <p className="mb-2.5 text-[10px] font-bold uppercase tracking-widest text-zinc-600 dark:text-zinc-300">
               {t.views.groundedSources}
             </p>
             <div className="space-y-2">
@@ -287,13 +289,13 @@ export function ReportView({
                 return (
                   <div
                     key={source}
-                    className="flex items-center justify-between text-xs text-zinc-300"
+                    className="flex items-center justify-between text-xs text-zinc-700 dark:text-zinc-300 font-medium"
                   >
                     <span className="flex items-center gap-2 truncate pr-2">
-                      <Link2 className="size-3 text-emerald-400 shrink-0" />
+                      <Link2 className="size-3 text-emerald-600 dark:text-emerald-400 shrink-0" />
                       <span className="truncate">{source}</span>
                     </span>
-                    <span className="font-semibold text-emerald-400 shrink-0">
+                    <span className="font-bold text-emerald-800 dark:text-emerald-400 shrink-0">
                       {confidence}%
                     </span>
                   </div>
@@ -304,7 +306,7 @@ export function ReportView({
             <button
               type="button"
               onClick={onOpenDossier}
-              className="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer"
+              className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-400 hover:underline transition-colors cursor-pointer"
             >
               <span>{t.report.open}</span>
               <ExternalLink className="size-3" />
@@ -314,20 +316,25 @@ export function ReportView({
       </div>
 
       {/* Dolny pasek ugruntowania dowodowego */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-5 py-3 text-xs text-zinc-300">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-5 py-3 text-xs text-zinc-700 dark:text-zinc-300">
         <div className="flex flex-wrap items-center gap-3 text-xs">
-          <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
+          <span className="flex items-center gap-1.5 text-emerald-800 dark:text-emerald-400 font-bold">
             <Radio className="size-3" />
             <span>{t.report.grounding}</span>
           </span>
-          <span className="hidden text-zinc-500 sm:inline">·</span>
-          <span className="flex items-center gap-1.5 text-zinc-300">
-            <ShieldCheck className="size-3 text-emerald-400" />
+          <span className="hidden text-zinc-400 dark:text-zinc-500 sm:inline">
+            ·
+          </span>
+          <span className="flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300 font-medium">
+            <ShieldCheck className="size-3 text-emerald-600 dark:text-emerald-400" />
             <span>{t.report.backed}</span>
           </span>
         </div>
-        <label className="flex items-center gap-2 text-xs text-zinc-300 cursor-pointer">
-          <input type="checkbox" className="accent-emerald-500 rounded" />
+        <label className="flex items-center gap-2 text-xs text-zinc-700 dark:text-zinc-300 font-medium cursor-pointer">
+          <input
+            type="checkbox"
+            className="accent-emerald-600 dark:accent-emerald-500 rounded"
+          />
           <span>{t.report.rerun}</span>
         </label>
       </div>
