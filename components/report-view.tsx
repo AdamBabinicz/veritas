@@ -78,21 +78,23 @@ export function ReportView({
     >
       {/* Pasek nagłówkowy raportu z akcjami */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border px-5 py-4">
-        <div>
+        <div className="max-w-full sm:max-w-2xl">
           <div className="flex items-center gap-2 text-sm font-bold text-foreground">
-            <ClipboardCheck className="size-4 text-emerald-600 dark:text-emerald-400" />
+            <ClipboardCheck className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
             <h2
               id="report-section-heading"
               className="text-sm font-bold text-foreground"
             >
               {t.report.title}
             </h2>
-            <span className="rounded bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold text-emerald-800 dark:text-emerald-300 border border-emerald-500/30">
+            <span className="rounded bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold text-emerald-800 dark:text-emerald-300 border border-emerald-500/30 shrink-0">
               {t.report.report}
             </span>
           </div>
-          <p className="mt-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 line-clamp-1">
-            {t.report.completed} · {claimText.slice(0, 52)}…
+          {/* Pełny tekst twierdzenia bez ucinania slice(0, 52) */}
+          <p className="mt-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 break-words leading-relaxed">
+            {t.report.completed} ·{" "}
+            <span className="text-foreground font-semibold">„{claimText}”</span>
           </p>
         </div>
 
@@ -128,7 +130,7 @@ export function ReportView({
       </div>
 
       {/* Główna siatka analityczna: Wskaźnik kołowy | Inspektor tekstu | Dossier */}
-      <div className="grid gap-5 p-5 xl:grid-cols-[210px_1fr_300px]">
+      <div className="grid gap-5 p-5 xl:grid-cols-[210px_1fr_320px]">
         {/* Kolumna 1: Wskaźnik zaufania (Circular Truth Meter) */}
         <div className="flex flex-col items-center justify-center border-b border-border pb-5 xl:border-b-0 xl:border-r xl:pb-0">
           <div className="relative grid size-40 place-items-center">
@@ -158,12 +160,12 @@ export function ReportView({
               />
             </svg>
 
-            {/* Wyśrodkowana etykieta z restrykcyjnym max-w, która idealnie mieści się w pierścieniu */}
+            {/* Wyśrodkowana etykieta w pierścieniu */}
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-2">
               <span className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground leading-none">
                 {score}%
               </span>
-              <span className="mt-1 max-w-[105px] px-1 text-[11px] font-bold leading-tight text-emerald-800 dark:text-emerald-400 break-words text-center">
+              <span className="mt-1 max-w-[120px] px-1 text-[11px] font-bold leading-tight text-emerald-800 dark:text-emerald-400 break-words text-center">
                 {scoreLabel}
               </span>
             </div>
@@ -212,7 +214,7 @@ export function ReportView({
                 {t.report.inspect}
               </span>
             </div>
-            <p className="text-sm leading-7 text-zinc-800 dark:text-zinc-200">
+            <p className="text-sm leading-7 text-zinc-800 dark:text-zinc-200 break-words">
               {parts.map((word, i) => {
                 const isVerified = i >= 2 && i <= 4;
                 const isMisleading = i >= 13 && i <= 16;
@@ -267,11 +269,12 @@ export function ReportView({
                 {t.report.context}
               </span>
             </div>
-            <h3 className="text-sm font-bold text-foreground line-clamp-2">
-              {t.report.claim} {activeClaim + 1}:{" "}
-              {investigation?.title ?? t.claims[0].label}
+            {/* Pełny tytuł bez obcinania line-clamp-2 */}
+            <h3 className="text-sm font-bold text-foreground break-words leading-snug">
+              {t.report.claim}: {claimText}
             </h3>
-            <p className="mt-2 text-xs leading-5 text-zinc-700 dark:text-zinc-300 font-normal">
+            {/* Pełna analiza bez obcinania */}
+            <p className="mt-2.5 text-xs leading-relaxed text-zinc-700 dark:text-zinc-300 font-normal break-words">
               {dossierAnalysis}
             </p>
           </div>
@@ -280,7 +283,7 @@ export function ReportView({
             <p className="mb-2.5 text-[10px] font-bold uppercase tracking-widest text-zinc-600 dark:text-zinc-300">
               {t.views.groundedSources}
             </p>
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               {dossierSources.map((source, i) => {
                 const confidence = Number.parseInt(
                   source.match(/(\d+)%/)?.[1] ??
@@ -290,11 +293,11 @@ export function ReportView({
                 return (
                   <div
                     key={source}
-                    className="flex items-center justify-between text-xs text-zinc-700 dark:text-zinc-300 font-medium"
+                    className="flex items-start justify-between gap-2 text-xs text-zinc-700 dark:text-zinc-300 font-medium"
                   >
-                    <span className="flex items-center gap-2 truncate pr-2">
-                      <Link2 className="size-3 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                      <span className="truncate">{source}</span>
+                    <span className="flex items-start gap-1.5 break-all leading-tight pr-1">
+                      <Link2 className="size-3 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                      <span>{source}</span>
                     </span>
                     <span className="font-bold text-emerald-800 dark:text-emerald-400 shrink-0">
                       {confidence}%
