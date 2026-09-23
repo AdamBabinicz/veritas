@@ -49,12 +49,12 @@ export function DispatchConsole({
   return (
     <section
       aria-labelledby="dispatch-console-heading"
-      className="rounded-2xl border border-border bg-card shadow-2xl shadow-black/10"
+      className="rounded-2xl border border-border bg-card shadow-2xl shadow-black/5 dark:shadow-black/20"
     >
       {/* Pasek tytułowy konsoli */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-4">
         <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-          <Sparkles className="size-4 text-emerald-400" />
+          <Sparkles className="size-4 text-emerald-600 dark:text-emerald-400" />
           <h2
             id="dispatch-console-heading"
             className="text-sm font-semibold text-foreground"
@@ -62,8 +62,8 @@ export function DispatchConsole({
             {t.dispatch.title}
           </h2>
         </div>
-        <span className="flex items-center gap-1.5 text-xs text-zinc-300 font-medium">
-          <Clock3 className="size-3.5 text-zinc-400" />
+        <span className="flex items-center gap-1.5 text-xs text-zinc-600 dark:text-zinc-300 font-medium">
+          <Clock3 className="size-3.5 text-zinc-500 dark:text-zinc-400" />
           <span>{t.dispatch.average}</span>
         </span>
       </div>
@@ -75,10 +75,10 @@ export function DispatchConsole({
             key={tab}
             type="button"
             onClick={() => setActiveTab(i)}
-            className={`rounded-t-lg px-4 py-2.5 text-xs font-medium transition-colors cursor-pointer ${
+            className={`rounded-t-lg px-4 py-2.5 text-xs font-semibold transition-colors cursor-pointer ${
               activeTab === i
-                ? "border-b-2 border-emerald-400 text-emerald-400 font-semibold"
-                : "text-zinc-400 hover:text-foreground"
+                ? "border-b-2 border-emerald-600 dark:border-emerald-400 text-emerald-700 dark:text-emerald-300"
+                : "text-zinc-500 hover:text-foreground dark:text-zinc-400"
             }`}
           >
             {tab}
@@ -108,7 +108,7 @@ export function DispatchConsole({
                   aria-label={t.dispatch.selectDomainAria}
                   value={domain}
                   onChange={(e) => setDomain(Number(e.target.value))}
-                  className="rounded-lg border border-border bg-muted/80 px-3 py-2 text-xs text-foreground outline-none cursor-pointer hover:border-border/90"
+                  className="rounded-lg border border-border bg-muted px-3 py-2 text-xs font-medium text-foreground outline-none cursor-pointer hover:border-border/90"
                 >
                   {t.dispatch.domains.map((item, i) => (
                     <option
@@ -120,7 +120,7 @@ export function DispatchConsole({
                     </option>
                   ))}
                 </select>
-                <span className="text-xs text-zinc-300">
+                <span className="text-xs text-zinc-600 dark:text-zinc-300 font-medium">
                   {input.length} / 10,000
                 </span>
               </div>
@@ -132,7 +132,7 @@ export function DispatchConsole({
         {activeTab === 1 && (
           <div className="space-y-3">
             <div className="flex items-center gap-2 rounded-xl border border-border bg-background p-3">
-              <Link2 className="size-4 shrink-0 text-emerald-400" />
+              <Link2 className="size-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
               <input
                 aria-label={t.dispatch.urlPlaceholder}
                 value={input}
@@ -143,7 +143,7 @@ export function DispatchConsole({
               <button
                 type="button"
                 onClick={() => setInput(t.dispatch.sampleUrl)}
-                className="shrink-0 rounded-lg bg-emerald-400 px-3 py-2 text-xs font-semibold text-emerald-950 transition-colors hover:bg-emerald-300 cursor-pointer"
+                className="shrink-0 rounded-lg bg-emerald-500 dark:bg-emerald-400 px-3 py-2 text-xs font-semibold text-white dark:text-emerald-950 transition-colors hover:bg-emerald-600 dark:hover:bg-emerald-300 cursor-pointer"
               >
                 {t.common.fetchArticle}
               </button>
@@ -162,8 +162,8 @@ export function DispatchConsole({
                   onClick={() => setSocialPlatform(platform)}
                   className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
                     socialPlatform === platform
-                      ? "border-emerald-500/80 bg-emerald-500/15 text-emerald-300"
-                      : "border-border bg-card/60 text-zinc-300 hover:text-foreground"
+                      ? "border-emerald-600/80 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300"
+                      : "border-border bg-card text-zinc-600 hover:text-foreground dark:text-zinc-300"
                   }`}
                 >
                   {platform}
@@ -181,8 +181,8 @@ export function DispatchConsole({
         )}
 
         {/* Pasek z licznikiem znaków i głównym przyciskiem wysłania */}
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border/70 pt-4">
-          <span className="text-xs text-zinc-300">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
+          <span className="text-xs text-zinc-600 dark:text-zinc-300 font-medium">
             {input.length} {t.dispatch.charCount}
           </span>
 
@@ -190,12 +190,12 @@ export function DispatchConsole({
             type="button"
             onClick={onRunVerification}
             disabled={isAnalyzing || !input.trim()}
-            className="flex items-center gap-2 rounded-xl bg-emerald-400 px-5 py-2.5 text-xs font-semibold text-emerald-950 shadow-md shadow-emerald-400/10 transition-all hover:bg-emerald-300 hover:shadow-emerald-400/20 active:scale-[0.98] disabled:cursor-wait disabled:opacity-60 cursor-pointer"
+            className="flex items-center gap-2 rounded-xl bg-emerald-500 dark:bg-emerald-400 px-5 py-2.5 text-xs font-semibold text-white dark:text-emerald-950 shadow-md shadow-emerald-500/10 transition-all hover:bg-emerald-600 dark:hover:bg-emerald-300 hover:shadow-emerald-500/20 active:scale-[0.98] disabled:cursor-wait disabled:opacity-60 cursor-pointer"
           >
             {isAnalyzing ? (
               <LoaderCircle className="size-4 animate-spin" />
             ) : (
-              <Zap className="size-4 fill-emerald-950" />
+              <Zap className="size-4 fill-white dark:fill-emerald-950" />
             )}
             <span>
               {isAnalyzing ? t.dispatch.reasoning : t.dispatch.deploy}
@@ -214,7 +214,7 @@ export function DispatchConsole({
                 setInput(demo.text);
                 setActiveTab(0);
               }}
-              className="rounded-full border border-border bg-muted/40 px-3 py-1.5 text-xs font-medium text-zinc-300 transition-colors hover:border-emerald-500/50 hover:text-emerald-300 cursor-pointer"
+              className="rounded-full border border-border bg-muted/50 px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-300 transition-colors hover:border-emerald-500/50 hover:text-emerald-600 dark:hover:text-emerald-300 cursor-pointer"
             >
               {demo.label}
             </button>
@@ -223,8 +223,8 @@ export function DispatchConsole({
 
         {/* Dedykowana sekcja z promptami dla jury hackathonu */}
         {t.dispatch.juryPrompts && t.dispatch.juryPrompts.length > 0 && (
-          <div className="mt-5 rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4">
-            <p className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-emerald-300">
+          <div className="mt-5 rounded-xl border border-emerald-600/30 dark:border-emerald-500/30 bg-emerald-500/5 p-4">
+            <p className="mb-2.5 text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
               {t.dispatch.jurySectionTitle}
             </p>
             <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
@@ -235,18 +235,18 @@ export function DispatchConsole({
                   onClick={() =>
                     handleSelectJuryPrompt(item.text, item.domainIndex)
                   }
-                  className="group rounded-lg border border-border/80 bg-card p-3 text-left transition-all hover:border-emerald-500/60 hover:bg-muted/50 cursor-pointer"
+                  className="group rounded-lg border border-border bg-card p-3 text-left transition-all hover:border-emerald-500/60 hover:bg-muted/50 cursor-pointer"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-semibold text-emerald-400 uppercase tracking-wider">
+                    <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">
                       {item.category}
                     </span>
                     <ArrowUpRight className="size-3 text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
-                  <div className="mt-1 text-xs font-medium text-foreground group-hover:text-emerald-300 transition-colors line-clamp-1">
+                  <div className="mt-1 text-xs font-semibold text-foreground group-hover:text-emerald-600 dark:group-hover:text-emerald-300 transition-colors line-clamp-1">
                     {item.label}
                   </div>
-                  <p className="mt-1 text-xs text-zinc-300 line-clamp-2 leading-relaxed">
+                  <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-300 line-clamp-2 leading-relaxed">
                     {item.text}
                   </p>
                 </button>

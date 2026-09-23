@@ -1,6 +1,6 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
-@import 'shadcn/tailwind.css';
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -47,24 +47,27 @@
 
 :root {
   color-scheme: light;
-  --background: oklch(0.965 0.008 95);
-  --foreground: oklch(0.19 0.02 165);
-  --card: oklch(0.985 0.004 95);
-  --card-foreground: oklch(0.19 0.02 165);
-  --popover: oklch(0.985 0.004 95);
-  --popover-foreground: oklch(0.19 0.02 165);
+  /* Czyste, kontrastowe tło i głęboki tekst dla trybu jasnego */
+  --background: oklch(0.98 0.002 95);
+  --foreground: oklch(0.16 0.02 165);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.16 0.02 165);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.16 0.02 165);
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --secondary: oklch(0.95 0 0);
+  --secondary-foreground: oklch(0.18 0 0);
+  --muted: oklch(0.94 0.005 95);
+  /* Znacząco podbity kontrast drugorzędnych tekstów (z 0.556 do 0.40) - eliminuje wyblakłość */
+  --muted-foreground: oklch(0.4 0.01 165);
+  --accent: oklch(0.94 0.005 95);
+  --accent-foreground: oklch(0.18 0 0);
+  --destructive: oklch(0.55 0.22 27);
+  /* Wyraźniejsze obramowania kart i paneli (z 0.922 do 0.88) */
+  --border: oklch(0.88 0.005 95);
+  --input: oklch(0.88 0.005 95);
+  --ring: oklch(0.5 0.15 160);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -75,10 +78,10 @@
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent: oklch(0.95 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-border: oklch(0.88 0 0);
+  --sidebar-ring: oklch(0.6 0 0);
 }
 
 .dark {
@@ -118,7 +121,7 @@
 
 @layer base {
   html {
-    background: #080b10;
+    @apply bg-background text-foreground;
   }
   * {
     @apply border-border outline-ring/50;

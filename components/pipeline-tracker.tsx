@@ -27,14 +27,14 @@ export function PipelineTracker({
         {/* Nagłówek potoku ze statusem */}
         <div className="mb-5 flex items-center justify-between border-b border-border/60 pb-3.5">
           <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
-            <Activity className="size-4 text-emerald-400 animate-pulse" />
+            <Activity className="size-4 text-emerald-600 dark:text-emerald-400 animate-pulse" />
             <span>{t.pipeline.title}</span>
           </div>
           <span
             className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider border ${
               isAnalyzing
-                ? "border-amber-500/40 bg-amber-500/15 text-amber-300 animate-pulse"
-                : "border-emerald-500/40 bg-emerald-500/15 text-emerald-300"
+                ? "border-amber-500/40 bg-amber-500/15 text-amber-700 dark:text-amber-300 animate-pulse"
+                : "border-emerald-500/40 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300"
             }`}
           >
             {status}
@@ -53,14 +53,14 @@ export function PipelineTracker({
                   <div
                     className={`z-10 grid size-5.5 place-items-center rounded-full border text-[10px] font-semibold transition-all ${
                       active
-                        ? "border-amber-400 bg-amber-500/20 text-amber-300 ring-2 ring-amber-400/40 animate-pulse"
+                        ? "border-amber-500 bg-amber-500/20 text-amber-700 dark:text-amber-300 ring-2 ring-amber-500/40 animate-pulse"
                         : complete
-                          ? "border-emerald-400/80 bg-emerald-500/20 text-emerald-300"
-                          : "border-border/80 bg-muted/60 text-zinc-400"
+                          ? "border-emerald-600/70 bg-emerald-500/20 text-emerald-700 dark:text-emerald-300"
+                          : "border-border bg-muted text-zinc-500 dark:text-zinc-400"
                     }`}
                   >
                     {complete ? (
-                      <Check className="size-3 text-emerald-300" />
+                      <Check className="size-3 text-emerald-700 dark:text-emerald-300 stroke-[2.5]" />
                     ) : (
                       <span>{i + 1}</span>
                     )}
@@ -69,7 +69,9 @@ export function PipelineTracker({
                   {i < t.pipeline.steps.length - 1 && (
                     <div
                       className={`absolute top-5.5 h-10 w-px transition-colors ${
-                        complete ? "bg-emerald-500/50" : "bg-border/80"
+                        complete
+                          ? "bg-emerald-600/40 dark:bg-emerald-500/50"
+                          : "bg-border"
                       }`}
                     />
                   )}
@@ -79,13 +81,13 @@ export function PipelineTracker({
                   <p
                     className={`text-xs leading-snug transition-colors ${
                       complete || active
-                        ? "font-medium text-foreground"
-                        : "text-zinc-400"
+                        ? "font-semibold text-foreground"
+                        : "text-zinc-500 dark:text-zinc-400"
                     }`}
                   >
                     {step}…
                   </p>
-                  <p className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-zinc-300">
+                  <p className="mt-1 text-[10px] font-bold uppercase tracking-wider text-zinc-600 dark:text-zinc-300">
                     {t.pipeline.labels[i]}
                   </p>
                 </div>
@@ -95,9 +97,9 @@ export function PipelineTracker({
         </div>
       </div>
 
-      {/* Terminal logów potoku (agent.log) */}
-      <div className="mt-6 rounded-xl border border-border/80 bg-zinc-950 p-3.5 font-mono text-[11px] leading-5 text-zinc-300">
-        <div className="flex items-center justify-between border-b border-border/60 pb-1.5 mb-2 text-[10px] text-zinc-400">
+      {/* Terminal logów potoku (agent.log) - zawsze ciemny styl terminala z mocnym kontrastem */}
+      <div className="mt-6 rounded-xl border border-zinc-800 bg-zinc-950 p-3.5 font-mono text-[11px] leading-5 text-zinc-200">
+        <div className="flex items-center justify-between border-b border-zinc-800 pb-1.5 mb-2 text-[10px] text-zinc-400">
           <div className="flex items-center gap-1.5">
             <Terminal className="size-3.5 text-emerald-400" />
             <span className="font-semibold text-zinc-100">
