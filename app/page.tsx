@@ -264,10 +264,10 @@ export default function Page() {
   return (
     <main
       id="main-content"
-      className={`${dark ? "dark" : ""} min-h-screen w-full max-w-full overflow-x-hidden bg-background text-foreground selection:bg-emerald-500/20`}
+      className={`${dark ? "dark" : ""} min-h-screen w-full bg-background text-foreground selection:bg-emerald-500/20`}
     >
-      {/* Przyklejony pasek nawigacji (Sticky Navbar) na pełnej szerokości ekranu */}
-      <div className="sticky top-0 z-50 w-full border-b border-border/80 bg-background/85 backdrop-blur-md transition-colors">
+      {/* 100% niezawodny pasek nawigacji: fixed top-0, zawsze przyklejony */}
+      <header className="fixed top-0 left-0 right-0 z-50 w-full border-b border-border/80 bg-background/90 backdrop-blur-md transition-colors">
         <div className="mx-auto max-w-[1500px] w-full px-4 sm:px-6 lg:px-10">
           <Header
             t={t}
@@ -282,9 +282,10 @@ export default function Page() {
             onSelectSample={(sampleText) => setInput(sampleText)}
           />
         </div>
-      </div>
+      </header>
 
-      <div className="mx-auto max-w-[1500px] w-full min-w-0 px-4 pb-16 sm:px-6 lg:px-10">
+      {/* Kontener treści z marginesem górnym pt-[74px] odpowiadającym wysokości navbaru */}
+      <div className="mx-auto max-w-[1500px] w-full min-w-0 px-4 pt-[74px] pb-16 sm:px-6 lg:px-10">
         {/* Widoki pomocnicze */}
         {activeView === 1 && (
           <div className="w-full min-w-0 max-w-full pt-6">

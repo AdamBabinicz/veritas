@@ -152,9 +152,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" className="dark overflow-x-hidden" suppressHydrationWarning>
       <body
-        className="min-h-screen bg-background text-foreground antialiased selection:bg-emerald-500/20"
+        className="min-h-screen w-full overflow-x-hidden bg-background text-foreground antialiased selection:bg-emerald-500/20"
         suppressHydrationWarning
       >
         <script
