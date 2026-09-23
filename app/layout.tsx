@@ -164,26 +164,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark overflow-x-hidden" suppressHydrationWarning>
-      <head>
-        <link
-          rel="preconnect"
-          href="https://www.googletagmanager.com"
-          crossOrigin="anonymous"
-        />
-        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-
-        {/* JSON-LD w sekcji HEAD - zapobiega błędom hydracji w body */}
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className="min-h-screen w-full overflow-x-hidden bg-background text-foreground antialiased selection:bg-emerald-500/20"
+        suppressHydrationWarning
+      >
         <script
           type="application/ld+json"
           suppressHydrationWarning
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-      </head>
-      <body
-        className="min-h-screen w-full overflow-x-hidden bg-background text-foreground antialiased selection:bg-emerald-500/20"
-        suppressHydrationWarning
-      >
+
         <noscript>
           <iframe
             src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
@@ -195,7 +186,7 @@ export default function RootLayout({
 
         {children}
 
-        {/* Czysty, w pełni bezpieczny dla hydracji skrypt GTM z lazyOnload */}
+        {/* Czyste, asynchroniczne ładowanie GTM po hydracji */}
         <Script id="google-tag-manager" strategy="lazyOnload">
           {`
             window.dataLayer = window.dataLayer || [];
