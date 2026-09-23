@@ -4,7 +4,6 @@ import "./globals.css";
 
 const siteUrl = "https://veritas-io.netlify.app/";
 const shareImage = "/og-image.jpg";
-const GA_MEASUREMENT_ID = "G-5B1P108Z2D";
 const GTM_ID = "GTM-PNC3NGF9";
 
 export const viewport: Viewport = {
@@ -167,39 +166,22 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark overflow-x-hidden" suppressHydrationWarning>
       <head>
-        {/* Preconnect do Google Tag Manager, by przyspieszyć nawiązanie połączenia */}
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link
+          rel="preconnect"
+          href="https://www.googletagmanager.com"
+          crossOrigin="anonymous"
+        />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 
-        {/* Google Tag Manager (GTM) - ładowany w trybie lazyOnload, by nie blokować LCP na mobile */}
+        {/* Czysty Google Tag Manager - zarządza GA4 i wszystkimi tagami bez dublowania kodu */}
         <Script id="google-tag-manager" strategy="lazyOnload">
           {`
+            window.dataLayer = window.dataLayer || [];
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
             j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
             })(window,document,'script','dataLayer','${GTM_ID}');
-          `}
-        </Script>
-
-        {/* Google Analytics (GA4) - również w trybie lazyOnload */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="lazyOnload"
-        />
-        <Script id="google-analytics-init" strategy="lazyOnload">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('consent', 'default', {
-              'analytics_storage': 'granted'
-            });
-
-            gtag('config', '${GA_MEASUREMENT_ID}', {
-              page_path: window.location.pathname,
-            });
           `}
         </Script>
       </head>
