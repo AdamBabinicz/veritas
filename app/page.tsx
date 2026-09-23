@@ -327,29 +327,29 @@ export default function Page() {
           {/* Sekcja Hero z metrykami operacyjnymi */}
           <section className="grid gap-8 pb-9 pt-10 lg:grid-cols-[1fr_370px] lg:pt-14">
             <div>
-              <div className="mb-6 flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-emerald-500">
-                <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <div className="mb-6 flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-400">
+                <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
                 {t.hero.eyebrow}
-                <span className="text-muted-foreground/50">/</span>
+                <span className="text-zinc-500">/</span>
                 {t.hero.workspace}
               </div>
               <h1 className="max-w-3xl text-4xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-6xl">
                 {t.hero.title}
                 <br />
-                <span className="text-muted-foreground font-medium">
+                <span className="text-zinc-400 font-medium">
                   {t.hero.titleMuted}
                 </span>
               </h1>
-              <p className="mt-5 max-w-xl text-sm leading-6 text-muted-foreground">
+              <p className="mt-5 max-w-xl text-sm leading-6 text-zinc-300">
                 {t.hero.description}
               </p>
             </div>
 
             <div className="flex flex-col justify-end gap-3 rounded-2xl border border-border bg-card p-4 shadow-xs">
-              <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+              <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-zinc-300">
                 <span>{t.hero.status}</span>
-                <span className="flex items-center gap-1.5 text-emerald-500">
-                  <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="flex items-center gap-1.5 text-emerald-400">
+                  <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
                   {t.hero.operational}
                 </span>
               </div>
@@ -387,7 +387,8 @@ export default function Page() {
             />
           </section>
 
-          <p className="mt-3 text-center text-[10px] leading-4 text-muted-foreground/70">
+          {/* Disclaimer z podniesionym kontrastem (WCAG AA) */}
+          <p className="mt-3.5 text-center text-xs leading-5 text-zinc-300">
             {t.common.disclaimer}
           </p>
 
@@ -417,7 +418,7 @@ export default function Page() {
             role="status"
             className="fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-card px-4 py-3 text-xs font-semibold text-emerald-400 shadow-2xl shadow-emerald-500/10 animate-in fade-in slide-in-from-bottom-2 duration-200"
           >
-            <Check className="size-4 text-emerald-500" />
+            <Check className="size-4 text-emerald-400" />
             <span>{t.toast.complete}</span>
           </div>
         )}

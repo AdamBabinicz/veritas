@@ -27,14 +27,14 @@ export function PipelineTracker({
         {/* Nagłówek potoku ze statusem */}
         <div className="mb-5 flex items-center justify-between border-b border-border/60 pb-3.5">
           <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
-            <Activity className="size-4 text-emerald-500 animate-pulse" />
+            <Activity className="size-4 text-emerald-400 animate-pulse" />
             <span>{t.pipeline.title}</span>
           </div>
           <span
-            className={`rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider border ${
+            className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider border ${
               isAnalyzing
-                ? "border-amber-500/30 bg-amber-500/10 text-amber-400 animate-pulse"
-                : "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+                ? "border-amber-500/40 bg-amber-500/15 text-amber-300 animate-pulse"
+                : "border-emerald-500/40 bg-emerald-500/15 text-emerald-300"
             }`}
           >
             {status}
@@ -53,14 +53,14 @@ export function PipelineTracker({
                   <div
                     className={`z-10 grid size-5.5 place-items-center rounded-full border text-[10px] font-semibold transition-all ${
                       active
-                        ? "border-amber-500 bg-amber-500/20 text-amber-400 ring-2 ring-amber-500/30 animate-pulse"
+                        ? "border-amber-400 bg-amber-500/20 text-amber-300 ring-2 ring-amber-400/40 animate-pulse"
                         : complete
-                          ? "border-emerald-500/60 bg-emerald-500/15 text-emerald-400"
-                          : "border-border bg-muted/40 text-muted-foreground"
+                          ? "border-emerald-400/80 bg-emerald-500/20 text-emerald-300"
+                          : "border-border/80 bg-muted/60 text-zinc-400"
                     }`}
                   >
                     {complete ? (
-                      <Check className="size-3 text-emerald-400" />
+                      <Check className="size-3 text-emerald-300" />
                     ) : (
                       <span>{i + 1}</span>
                     )}
@@ -69,7 +69,7 @@ export function PipelineTracker({
                   {i < t.pipeline.steps.length - 1 && (
                     <div
                       className={`absolute top-5.5 h-10 w-px transition-colors ${
-                        complete ? "bg-emerald-500/40" : "bg-border"
+                        complete ? "bg-emerald-500/50" : "bg-border/80"
                       }`}
                     />
                   )}
@@ -80,12 +80,12 @@ export function PipelineTracker({
                     className={`text-xs leading-snug transition-colors ${
                       complete || active
                         ? "font-medium text-foreground"
-                        : "text-muted-foreground/60"
+                        : "text-zinc-400"
                     }`}
                   >
                     {step}…
                   </p>
-                  <p className="mt-1 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+                  <p className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-zinc-300">
                     {t.pipeline.labels[i]}
                   </p>
                 </div>
@@ -96,32 +96,32 @@ export function PipelineTracker({
       </div>
 
       {/* Terminal logów potoku (agent.log) */}
-      <div className="mt-6 rounded-xl border border-border bg-background/90 p-3.5 font-mono text-[10px] leading-5 text-muted-foreground">
-        <div className="flex items-center justify-between border-b border-border/50 pb-1.5 mb-2 text-[9px] text-muted-foreground/80">
+      <div className="mt-6 rounded-xl border border-border/80 bg-zinc-950 p-3.5 font-mono text-[11px] leading-5 text-zinc-300">
+        <div className="flex items-center justify-between border-b border-border/60 pb-1.5 mb-2 text-[10px] text-zinc-400">
           <div className="flex items-center gap-1.5">
-            <Terminal className="size-3 text-emerald-500" />
-            <span className="font-semibold text-foreground">
+            <Terminal className="size-3.5 text-emerald-400" />
+            <span className="font-semibold text-zinc-100">
               {t.pipeline.log}
             </span>
           </div>
-          <span className="text-[9px] uppercase tracking-wider text-emerald-500/80">
+          <span className="text-[10px] uppercase tracking-wider text-emerald-400 font-semibold">
             // {t.pipeline.stream}
           </span>
         </div>
 
-        <div className="max-h-28 overflow-y-auto space-y-1 pr-1 font-mono text-[10px]">
+        <div className="max-h-28 overflow-y-auto space-y-1.5 pr-1 font-mono text-[11px]">
           {logLines.length > 0 ? (
             logLines.map((line, idx) => (
               <div
                 key={`${line}-${idx}`}
-                className="flex items-start gap-1.5 break-all"
+                className="flex items-start gap-1.5 break-all text-zinc-200"
               >
-                <span className="text-emerald-500 shrink-0">›</span>
+                <span className="text-emerald-400 font-bold shrink-0">›</span>
                 <span
                   className={
                     idx === logLines.length - 1
                       ? "text-emerald-300 font-medium"
-                      : ""
+                      : "text-zinc-200"
                   }
                 >
                   {line}
@@ -129,15 +129,15 @@ export function PipelineTracker({
               </div>
             ))
           ) : (
-            <div className="space-y-1 text-muted-foreground/60">
+            <div className="space-y-1 text-zinc-300">
               <div className="flex items-center gap-1.5">
-                <span className="text-emerald-500">›</span>
+                <span className="text-emerald-400 font-bold">›</span>
                 <span>
                   {isAnalyzing ? t.pipeline.querying : t.pipeline.synced}
                 </span>
               </div>
-              <div className="flex items-center gap-1.5 text-muted-foreground/40">
-                <span className="text-emerald-500/60">›</span>
+              <div className="flex items-center gap-1.5 text-zinc-400">
+                <span className="text-emerald-400/80 font-bold">›</span>
                 <span>{t.pipeline.complete}</span>
               </div>
             </div>

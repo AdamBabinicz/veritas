@@ -47,15 +47,23 @@ export function DispatchConsole({
   };
 
   return (
-    <div className="rounded-2xl border border-border bg-card shadow-2xl shadow-black/10">
+    <section
+      aria-labelledby="dispatch-console-heading"
+      className="rounded-2xl border border-border bg-card shadow-2xl shadow-black/10"
+    >
       {/* Pasek tytułowy konsoli */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-4">
-        <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
-          <Sparkles className="size-4 text-emerald-500" />
-          <span>{t.dispatch.title}</span>
+        <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+          <Sparkles className="size-4 text-emerald-400" />
+          <h2
+            id="dispatch-console-heading"
+            className="text-sm font-semibold text-foreground"
+          >
+            {t.dispatch.title}
+          </h2>
         </div>
-        <span className="flex items-center gap-1.5 text-[10px] text-muted-foreground font-medium">
-          <Clock3 className="size-3" />
+        <span className="flex items-center gap-1.5 text-xs text-zinc-300 font-medium">
+          <Clock3 className="size-3.5 text-zinc-400" />
           <span>{t.dispatch.average}</span>
         </span>
       </div>
@@ -69,8 +77,8 @@ export function DispatchConsole({
             onClick={() => setActiveTab(i)}
             className={`rounded-t-lg px-4 py-2.5 text-xs font-medium transition-colors cursor-pointer ${
               activeTab === i
-                ? "border-b-2 border-emerald-500 text-emerald-400 font-semibold"
-                : "text-muted-foreground hover:text-foreground"
+                ? "border-b-2 border-emerald-400 text-emerald-400 font-semibold"
+                : "text-zinc-400 hover:text-foreground"
             }`}
           >
             {tab}
@@ -86,7 +94,7 @@ export function DispatchConsole({
               aria-label={t.dispatch.textPlaceholder}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className="min-h-[130px] w-full resize-none rounded-xl border border-border bg-background p-4 text-sm leading-6 text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-emerald-500/50"
+              className="min-h-[130px] w-full resize-none rounded-xl border border-border bg-background p-4 text-sm leading-6 text-foreground outline-none transition-colors placeholder:text-zinc-400 focus:border-emerald-500/60"
               placeholder={t.dispatch.textPlaceholder}
             />
 
@@ -100,7 +108,7 @@ export function DispatchConsole({
                   aria-label={t.dispatch.selectDomainAria}
                   value={domain}
                   onChange={(e) => setDomain(Number(e.target.value))}
-                  className="rounded-lg border border-border bg-muted/70 px-3 py-2 text-xs text-foreground outline-none cursor-pointer hover:border-border/80"
+                  className="rounded-lg border border-border bg-muted/80 px-3 py-2 text-xs text-foreground outline-none cursor-pointer hover:border-border/90"
                 >
                   {t.dispatch.domains.map((item, i) => (
                     <option
@@ -112,7 +120,7 @@ export function DispatchConsole({
                     </option>
                   ))}
                 </select>
-                <span className="text-[10px] text-muted-foreground">
+                <span className="text-xs text-zinc-300">
                   {input.length} / 10,000
                 </span>
               </div>
@@ -124,18 +132,18 @@ export function DispatchConsole({
         {activeTab === 1 && (
           <div className="space-y-3">
             <div className="flex items-center gap-2 rounded-xl border border-border bg-background p-3">
-              <Link2 className="size-4 shrink-0 text-emerald-500" />
+              <Link2 className="size-4 shrink-0 text-emerald-400" />
               <input
                 aria-label={t.dispatch.urlPlaceholder}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                className="min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
+                className="min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-zinc-400"
                 placeholder={t.dispatch.urlPlaceholder}
               />
               <button
                 type="button"
                 onClick={() => setInput(t.dispatch.sampleUrl)}
-                className="shrink-0 rounded-lg bg-emerald-400 px-3 py-2 text-[10px] font-semibold text-emerald-950 transition-colors hover:bg-emerald-300 cursor-pointer"
+                className="shrink-0 rounded-lg bg-emerald-400 px-3 py-2 text-xs font-semibold text-emerald-950 transition-colors hover:bg-emerald-300 cursor-pointer"
               >
                 {t.common.fetchArticle}
               </button>
@@ -152,10 +160,10 @@ export function DispatchConsole({
                   type="button"
                   key={platform}
                   onClick={() => setSocialPlatform(platform)}
-                  className={`rounded-full border px-3 py-1.5 text-[10px] font-medium transition-colors cursor-pointer ${
+                  className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
                     socialPlatform === platform
-                      ? "border-emerald-500/80 bg-emerald-500/10 text-emerald-400"
-                      : "border-border bg-card/40 text-muted-foreground hover:text-foreground"
+                      ? "border-emerald-500/80 bg-emerald-500/15 text-emerald-300"
+                      : "border-border bg-card/60 text-zinc-300 hover:text-foreground"
                   }`}
                 >
                   {platform}
@@ -166,15 +174,15 @@ export function DispatchConsole({
               aria-label={t.dispatch.socialPlaceholder}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className="w-full rounded-lg border border-border bg-card p-3 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-emerald-500/50"
+              className="w-full rounded-lg border border-border bg-card p-3 text-sm text-foreground outline-none placeholder:text-zinc-400 focus:border-emerald-500/60"
               placeholder={t.dispatch.socialPlaceholder}
             />
           </div>
         )}
 
         {/* Pasek z licznikiem znaków i głównym przyciskiem wysłania */}
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border/60 pt-4">
-          <span className="text-[10px] text-muted-foreground">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border/70 pt-4">
+          <span className="text-xs text-zinc-300">
             {input.length} {t.dispatch.charCount}
           </span>
 
@@ -206,7 +214,7 @@ export function DispatchConsole({
                 setInput(demo.text);
                 setActiveTab(0);
               }}
-              className="rounded-full border border-border bg-muted/20 px-3 py-1 text-[10px] font-medium text-muted-foreground transition-colors hover:border-emerald-500/40 hover:text-emerald-400 cursor-pointer"
+              className="rounded-full border border-border bg-muted/40 px-3 py-1.5 text-xs font-medium text-zinc-300 transition-colors hover:border-emerald-500/50 hover:text-emerald-300 cursor-pointer"
             >
               {demo.label}
             </button>
@@ -215,11 +223,11 @@ export function DispatchConsole({
 
         {/* Dedykowana sekcja z promptami dla jury hackathonu */}
         {t.dispatch.juryPrompts && t.dispatch.juryPrompts.length > 0 && (
-          <div className="mt-5 rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3.5">
-            <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-emerald-400">
+          <div className="mt-5 rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4">
+            <p className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-emerald-300">
               {t.dispatch.jurySectionTitle}
             </p>
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
               {t.dispatch.juryPrompts.map((item, idx) => (
                 <button
                   key={`${item.label}-${idx}`}
@@ -227,18 +235,18 @@ export function DispatchConsole({
                   onClick={() =>
                     handleSelectJuryPrompt(item.text, item.domainIndex)
                   }
-                  className="group rounded-lg border border-border/80 bg-card p-2.5 text-left transition-all hover:border-emerald-500/50 hover:bg-muted/40 cursor-pointer"
+                  className="group rounded-lg border border-border/80 bg-card p-3 text-left transition-all hover:border-emerald-500/60 hover:bg-muted/50 cursor-pointer"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-semibold text-emerald-400 uppercase tracking-wider">
+                    <span className="text-[10px] font-semibold text-emerald-400 uppercase tracking-wider">
                       {item.category}
                     </span>
-                    <ArrowUpRight className="size-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <ArrowUpRight className="size-3 text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
                   <div className="mt-1 text-xs font-medium text-foreground group-hover:text-emerald-300 transition-colors line-clamp-1">
                     {item.label}
                   </div>
-                  <p className="mt-0.5 text-[10px] text-muted-foreground line-clamp-2 leading-relaxed">
+                  <p className="mt-1 text-xs text-zinc-300 line-clamp-2 leading-relaxed">
                     {item.text}
                   </p>
                 </button>
@@ -247,6 +255,6 @@ export function DispatchConsole({
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 }

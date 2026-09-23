@@ -23,8 +23,8 @@ type Dictionary = ReturnType<typeof getDictionary>;
 export function Metric({ value, label }: { value: string; label: string }) {
   return (
     <div>
-      <div className="text-sm font-medium text-foreground">{value}</div>
-      <div className="mt-1 text-[9px] uppercase tracking-wider text-muted-foreground">
+      <div className="text-sm font-semibold text-foreground">{value}</div>
+      <div className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-zinc-300">
         {label}
       </div>
     </div>
@@ -41,14 +41,14 @@ export function MiniStat({
   label: string;
 }) {
   return (
-    <div className="rounded-xl border border-border bg-card/60 p-3 text-emerald-600 transition-all hover:border-emerald-500/30">
+    <div className="rounded-xl border border-border bg-card/80 p-3 text-emerald-400 transition-all hover:border-emerald-500/40">
       <div className="flex items-center justify-between">
-        <span className="text-lg font-semibold text-foreground">{value}</span>
-        <span className="flex size-6 items-center justify-center rounded-md bg-emerald-500/10 text-emerald-500 [&>svg]:size-3.5">
+        <span className="text-lg font-bold text-foreground">{value}</span>
+        <span className="flex size-6 items-center justify-center rounded-md bg-emerald-500/15 text-emerald-400 [&>svg]:size-3.5">
           {icon}
         </span>
       </div>
-      <div className="mt-1.5 text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
+      <div className="mt-1.5 text-[10px] font-semibold uppercase tracking-wider text-zinc-300">
         {label}
       </div>
     </div>
@@ -67,8 +67,8 @@ export function ViewShell({
   return (
     <section className="py-10 lg:py-14">
       <div className="mb-8">
-        <p className="mb-3 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-emerald-500">
-          <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+        <p className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-400">
+          <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
           {eyebrow}
         </p>
         <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
@@ -151,8 +151,8 @@ export function InvestigationsView({
             onClick={() => setActiveCategory(i)}
             className={`cursor-pointer rounded-full border px-3.5 py-1.5 text-xs font-medium transition-all ${
               activeCategory === i
-                ? "border-emerald-500/80 bg-emerald-500/10 text-emerald-400 shadow-xs"
-                : "border-border bg-card/40 text-muted-foreground hover:border-border/80 hover:text-foreground"
+                ? "border-emerald-500/80 bg-emerald-500/15 text-emerald-300 shadow-xs"
+                : "border-border bg-card/60 text-zinc-300 hover:border-border/90 hover:text-foreground"
             }`}
           >
             {category}
@@ -163,7 +163,7 @@ export function InvestigationsView({
       <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-xs">
         <div className="overflow-x-auto">
           <div className="min-w-[680px]">
-            <div className="grid grid-cols-[1.6fr_0.8fr_1fr_0.8fr_0.6fr_0.8fr] gap-3 border-b border-border bg-muted/20 px-5 py-3.5 text-[9px] font-semibold uppercase tracking-widest text-muted-foreground">
+            <div className="grid grid-cols-[1.6fr_0.8fr_1fr_0.8fr_0.6fr_0.8fr] gap-3 border-b border-border bg-muted/40 px-5 py-3.5 text-[10px] font-semibold uppercase tracking-widest text-zinc-300">
               {labels.map((label) => (
                 <span key={label}>{label}</span>
               ))}
@@ -187,35 +187,33 @@ export function InvestigationsView({
                     </span>
                     <span>
                       <span
-                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${
+                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
                           row.status === "Verified"
-                            ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+                            ? "border border-emerald-500/40 bg-emerald-500/15 text-emerald-300"
                             : row.status === "Misleading"
-                              ? "border border-amber-500/30 bg-amber-500/10 text-amber-400"
-                              : "border border-rose-500/30 bg-rose-500/10 text-rose-400"
+                              ? "border border-amber-500/40 bg-amber-500/15 text-amber-300"
+                              : "border border-rose-500/40 bg-rose-500/15 text-rose-300"
                         }`}
                       >
                         {localeStatus(row.status)}
                       </span>
                     </span>
-                    <span className="text-muted-foreground">
-                      {row.category}
-                    </span>
-                    <span className="text-muted-foreground">{row.date}</span>
+                    <span className="text-zinc-300">{row.category}</span>
+                    <span className="text-zinc-300">{row.date}</span>
                     <span className="font-semibold text-foreground">
                       {row.score}
                     </span>
                     <div>
                       <button
                         type="button"
-                        className="inline-flex items-center gap-1 rounded-lg border border-border bg-card px-2.5 py-1 text-[10px] font-medium text-muted-foreground transition-all hover:border-emerald-500/50 hover:text-foreground cursor-pointer"
+                        className="inline-flex items-center gap-1 rounded-lg border border-border/80 bg-card px-2.5 py-1 text-xs font-medium text-zinc-200 transition-all hover:border-emerald-500/50 hover:text-foreground cursor-pointer"
                         onClick={(event) => {
                           event.stopPropagation();
                           onOpenDossier(row);
                         }}
                       >
                         <span>{labels[5]}</span>
-                        <ArrowUpRight className="size-3" />
+                        <ArrowUpRight className="size-3 text-zinc-400" />
                       </button>
                     </div>
                   </div>
@@ -312,13 +310,13 @@ export function InteractiveRepositoryView({
         />
       </div>
 
-      <div className="mb-3 flex items-center gap-2.5 rounded-xl border border-border bg-card px-4 py-3 shadow-xs focus-within:border-emerald-500/50">
-        <Search className="size-4 text-muted-foreground shrink-0" />
+      <div className="mb-3 flex items-center gap-2.5 rounded-xl border border-border bg-card px-4 py-3 shadow-xs focus-within:border-emerald-500/60">
+        <Search className="size-4 text-zinc-400 shrink-0" />
         <input
           aria-label={t.views.searchClaims}
           value={search}
           onChange={(event) => setSearch(event.target.value)}
-          className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+          className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-zinc-400"
           placeholder={t.views.searchClaims}
         />
       </div>
@@ -330,8 +328,8 @@ export function InteractiveRepositoryView({
             onClick={() => setSearch(search === tag ? "" : tag)}
             className={`cursor-pointer rounded-full border px-3 py-1 text-xs font-medium transition-all ${
               search === tag
-                ? "border-emerald-500/80 bg-emerald-500/10 text-emerald-400 shadow-xs"
-                : "border-border bg-card/40 text-muted-foreground hover:border-border/80 hover:text-foreground"
+                ? "border-emerald-500/80 bg-emerald-500/15 text-emerald-300 shadow-xs"
+                : "border-border bg-card/60 text-zinc-300 hover:border-border/90 hover:text-foreground"
             }`}
           >
             {tag}
@@ -351,28 +349,28 @@ export function InteractiveRepositoryView({
               >
                 <div>
                   <div className="mb-4 flex items-center justify-between">
-                    <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-semibold text-emerald-400">
+                    <span className="rounded-full border border-emerald-500/30 bg-emerald-500/15 px-2.5 py-0.5 text-xs font-semibold text-emerald-300">
                       {record.tag}
                     </span>
-                    <span className="flex items-center gap-1 text-xs text-muted-foreground transition group-hover:text-emerald-400">
+                    <span className="flex items-center gap-1 text-xs text-zinc-300 transition group-hover:text-emerald-300">
                       <Eye className="size-3.5" />
-                      <span className="text-[10px] font-medium">Dossier</span>
+                      <span className="text-xs font-medium">Dossier</span>
                     </span>
                   </div>
-                  <h3 className="text-sm font-semibold leading-snug text-foreground group-hover:text-emerald-300 transition-colors line-clamp-2">
+                  <h2 className="text-sm font-semibold leading-snug text-foreground group-hover:text-emerald-300 transition-colors line-clamp-2">
                     {record.title}
-                  </h3>
-                  <p className="mt-2 text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                  </h2>
+                  <p className="mt-2 text-xs text-zinc-300 line-clamp-2 leading-relaxed">
                     {record.excerpt}
                   </p>
                 </div>
 
                 <div className="mt-5 flex items-end justify-between border-t border-border pt-3.5">
                   <div>
-                    <span className="text-[9px] uppercase tracking-widest text-muted-foreground block">
+                    <span className="text-[10px] uppercase tracking-widest text-zinc-300 font-semibold block">
                       {t.report.confidence}
                     </span>
-                    <span className="text-[10px] text-muted-foreground font-medium">
+                    <span className="text-xs text-zinc-300 font-medium">
                       {record.status}
                     </span>
                   </div>
@@ -385,7 +383,7 @@ export function InteractiveRepositoryView({
           })}
         </div>
       ) : (
-        <div className="rounded-2xl border border-dashed border-border bg-card p-12 text-center text-sm text-muted-foreground">
+        <div className="rounded-2xl border border-dashed border-border bg-card p-12 text-center text-sm text-zinc-300">
           {t.views.searchClaims}
         </div>
       )}
@@ -472,23 +470,21 @@ export function ApiStatusView({ t }: { t: Dictionary; locale: Locale }) {
           >
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-start gap-3">
-                <div className="flex size-8 items-center justify-center rounded-lg border border-emerald-500/20 bg-emerald-500/10 shrink-0">
+                <div className="flex size-8 items-center justify-center rounded-lg border border-emerald-500/30 bg-emerald-500/15 shrink-0">
                   {service.icon}
                 </div>
                 <div>
-                  <h3 className="text-sm font-semibold text-foreground">
+                  <h2 className="text-sm font-semibold text-foreground">
                     {service.name}
-                  </h3>
-                  <p className="text-[11px] text-emerald-500 font-medium">
+                  </h2>
+                  <p className="text-xs text-emerald-400 font-medium">
                     {service.provider}
                   </p>
-                  <p className="mt-1 text-[10px] text-muted-foreground">
-                    {service.detail}
-                  </p>
+                  <p className="mt-1 text-xs text-zinc-300">{service.detail}</p>
                 </div>
               </div>
-              <span className="flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-[9px] font-semibold text-emerald-400 shrink-0">
-                <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/15 px-2.5 py-1 text-[10px] font-semibold text-emerald-300 shrink-0">
+                <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
                 {t.views.operational}
               </span>
             </div>
@@ -511,13 +507,13 @@ export function ApiStatusView({ t }: { t: Dictionary; locale: Locale }) {
       <div className="mt-4 rounded-2xl border border-border bg-card p-5 shadow-xs">
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <ShieldCheck className="size-4 text-emerald-500" />
-            <h3 className="text-sm font-semibold text-foreground">
+            <ShieldCheck className="size-4 text-emerald-400" />
+            <h2 className="text-sm font-semibold text-foreground">
               {t.views.globalTelemetry}
-            </h3>
+            </h2>
           </div>
-          <span className="flex items-center gap-1.5 text-[10px] font-semibold text-emerald-400">
-            <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400">
+            <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
             {t.views.live}
           </span>
         </div>
