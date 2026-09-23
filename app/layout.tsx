@@ -167,8 +167,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark overflow-x-hidden" suppressHydrationWarning>
       <head>
-        {/* Google Tag Manager (GTM) */}
-        <Script id="google-tag-manager" strategy="afterInteractive">
+        {/* Preconnect do Google Tag Manager, by przyspieszyć nawiązanie połączenia */}
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+
+        {/* Google Tag Manager (GTM) - ładowany w trybie lazyOnload, by nie blokować LCP na mobile */}
+        <Script id="google-tag-manager" strategy="lazyOnload">
           {`
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -178,12 +182,12 @@ export default function RootLayout({
           `}
         </Script>
 
-        {/* Google Analytics (GA4) */}
+        {/* Google Analytics (GA4) - również w trybie lazyOnload */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
-        <Script id="google-analytics-init" strategy="afterInteractive">
+        <Script id="google-analytics-init" strategy="lazyOnload">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
@@ -203,12 +207,12 @@ export default function RootLayout({
         className="min-h-screen w-full overflow-x-hidden bg-background text-foreground antialiased selection:bg-emerald-500/20"
         suppressHydrationWarning
       >
-        {/* Google Tag Manager (noscript fallback dla przeglądarek bez JS) */}
         <noscript>
           <iframe
             src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
             height="0"
             width="0"
+            style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
 
