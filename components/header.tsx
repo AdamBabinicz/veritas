@@ -47,7 +47,7 @@ export function Header({
   ];
 
   return (
-    <header className="relative flex min-h-[74px] items-center justify-between border-b border-border">
+    <header className="relative flex min-h-[74px] items-center justify-between">
       {/* Lewa strona: Logo VeritasAI + Nawigacja desktopowa */}
       <div className="flex items-center gap-8 min-w-0">
         <button

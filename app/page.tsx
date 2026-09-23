@@ -264,94 +264,110 @@ export default function Page() {
   return (
     <main
       id="main-content"
-      className={`${dark ? "dark" : ""} min-h-screen w-full overflow-x-hidden bg-background text-foreground selection:bg-emerald-500/20`}
+      className={`${dark ? "dark" : ""} min-h-screen w-full max-w-full overflow-x-hidden bg-background text-foreground selection:bg-emerald-500/20`}
     >
-      <div className="mx-auto max-w-[1500px] w-full px-4 pb-16 sm:px-6 lg:px-10">
-        {/* Modularny Header */}
-        <Header
-          t={t}
-          locale={locale}
-          onSelectLocale={selectLocale}
-          dark={dark}
-          onToggleDark={toggleTheme}
-          activeView={activeView}
-          setActiveView={setActiveView}
-          menuOpen={menuOpen}
-          setMenuOpen={setMenuOpen}
-          onSelectSample={(sampleText) => setInput(sampleText)}
-        />
-
-        {/* Widoki pomocnicze */}
-        {activeView === 1 && (
-          <InvestigationsView
+      {/* Przyklejony pasek nawigacji (Sticky Navbar) na pełnej szerokości ekranu */}
+      <div className="sticky top-0 z-50 w-full border-b border-border/80 bg-background/85 backdrop-blur-md transition-colors">
+        <div className="mx-auto max-w-[1500px] w-full px-4 sm:px-6 lg:px-10">
+          <Header
             t={t}
             locale={locale}
-            onOpenDossier={(row) => {
-              const index = row.caseIndex;
-              const record: LoadedInvestigation = {
-                title: row.name,
-                claim: t.claims[index]?.text ?? row.name,
-                score: row.score,
-                status: row.status,
-                analysis: t.report.dossierText,
-                sources: Array.from(t.sourcesList),
-                domain: index === 1 ? 2 : index === 2 ? 1 : 0,
-              };
-              loadRepositoryClaim(record);
-            }}
+            onSelectLocale={selectLocale}
+            dark={dark}
+            onToggleDark={toggleTheme}
+            activeView={activeView}
+            setActiveView={setActiveView}
+            menuOpen={menuOpen}
+            setMenuOpen={setMenuOpen}
+            onSelectSample={(sampleText) => setInput(sampleText)}
           />
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-[1500px] w-full min-w-0 px-4 pb-16 sm:px-6 lg:px-10">
+        {/* Widoki pomocnicze */}
+        {activeView === 1 && (
+          <div className="w-full min-w-0 max-w-full pt-6">
+            <InvestigationsView
+              t={t}
+              locale={locale}
+              onOpenDossier={(row) => {
+                const index = row.caseIndex;
+                const record: LoadedInvestigation = {
+                  title: row.name,
+                  claim: t.claims[index]?.text ?? row.name,
+                  score: row.score,
+                  status: row.status,
+                  analysis: t.report.dossierText,
+                  sources: Array.from(t.sourcesList),
+                  domain: index === 1 ? 2 : index === 2 ? 1 : 0,
+                };
+                loadRepositoryClaim(record);
+              }}
+            />
+          </div>
         )}
 
         {activeView === 2 && (
-          <InteractiveRepositoryView
-            t={t}
-            search={repositorySearch}
-            setSearch={setRepositorySearch}
-            onLoadClaim={(record) =>
-              loadRepositoryClaim({
-                title: record.title,
-                claim: record.excerpt,
-                score: record.result,
-                status: record.status,
-                analysis: record.analysis,
-                sources: record.sources,
-                domain: 0,
-              })
-            }
-          />
+          <div className="w-full min-w-0 max-w-full pt-6">
+            <InteractiveRepositoryView
+              t={t}
+              search={repositorySearch}
+              setSearch={setRepositorySearch}
+              onLoadClaim={(record) =>
+                loadRepositoryClaim({
+                  title: record.title,
+                  claim: record.excerpt,
+                  score: record.result,
+                  status: record.status,
+                  analysis: record.analysis,
+                  sources: record.sources,
+                  domain: 0,
+                })
+              }
+            />
+          </div>
         )}
 
-        {activeView === 3 && <ApiStatusView t={t} locale={locale} />}
+        {activeView === 3 && (
+          <div className="w-full min-w-0 max-w-full pt-6">
+            <ApiStatusView t={t} locale={locale} />
+          </div>
+        )}
 
         {/* Widok główny (Dashboard) */}
-        <div className={activeView === 0 ? "block" : "hidden"}>
+        <div
+          className={
+            activeView === 0 ? "block w-full min-w-0 max-w-full" : "hidden"
+          }
+        >
           {/* Sekcja Hero z metrykami operacyjnymi */}
-          <section className="grid gap-8 pb-9 pt-10 lg:grid-cols-[1fr_370px] lg:pt-14">
-            <div>
-              <div className="mb-6 flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-400">
-                <span className="size-2 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse" />
-                {t.hero.eyebrow}
+          <section className="grid gap-8 pb-9 pt-8 lg:grid-cols-[1fr_370px] lg:pt-12 w-full min-w-0">
+            <div className="min-w-0">
+              <div className="mb-6 flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-400 break-words">
+                <span className="size-2 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse shrink-0" />
+                <span>{t.hero.eyebrow}</span>
                 <span className="text-zinc-400 dark:text-zinc-500">/</span>
-                {t.hero.workspace}
+                <span>{t.hero.workspace}</span>
               </div>
-              <h1 className="max-w-3xl text-4xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-6xl">
+              <h1 className="max-w-3xl text-4xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-6xl break-words">
                 {t.hero.title}
                 <br />
                 <span className="text-zinc-500 dark:text-zinc-400 font-medium">
                   {t.hero.titleMuted}
                 </span>
               </h1>
-              <p className="mt-5 max-w-xl text-sm leading-6 text-zinc-700 dark:text-zinc-300 font-normal">
+              <p className="mt-5 max-w-xl text-sm leading-6 text-zinc-700 dark:text-zinc-300 font-normal break-words">
                 {t.hero.description}
               </p>
             </div>
 
-            <div className="flex flex-col justify-end gap-3 rounded-2xl border border-border bg-card p-4 shadow-xs">
+            <div className="flex flex-col justify-end gap-3 rounded-2xl border border-border bg-card p-4 shadow-xs min-w-0">
               <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-zinc-600 dark:text-zinc-300">
                 <span>{t.hero.status}</span>
                 <span className="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400">
-                  <span className="size-2 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse" />
-                  {t.hero.operational}
+                  <span className="size-2 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse shrink-0" />
+                  <span>{t.hero.operational}</span>
                 </span>
               </div>
               <div className="grid grid-cols-3 gap-2 border-t border-border pt-3">
@@ -363,53 +379,59 @@ export default function Page() {
           </section>
 
           {/* Główna sekcja operacyjna: Konsola zlecenia + Potok agenta */}
-          <section className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_330px]">
-            <DispatchConsole
-              t={t}
-              input={input}
-              setInput={setInput}
-              domain={domain}
-              setDomain={setDomain}
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-              socialPlatform={socialPlatform}
-              setSocialPlatform={setSocialPlatform}
-              isAnalyzing={isAnalyzing}
-              onRunVerification={runVerification}
-            />
+          <section className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_330px] w-full min-w-0">
+            <div className="min-w-0 max-w-full">
+              <DispatchConsole
+                t={t}
+                input={input}
+                setInput={setInput}
+                domain={domain}
+                setDomain={setDomain}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                socialPlatform={socialPlatform}
+                setSocialPlatform={setSocialPlatform}
+                isAnalyzing={isAnalyzing}
+                onRunVerification={runVerification}
+              />
+            </div>
 
-            <PipelineTracker
-              t={t}
-              isAnalyzing={isAnalyzing}
-              hasResult={hasResult}
-              status={status}
-              analysisStep={analysisStep}
-              logLines={logLines}
-            />
+            <div className="min-w-0 max-w-full">
+              <PipelineTracker
+                t={t}
+                isAnalyzing={isAnalyzing}
+                hasResult={hasResult}
+                status={status}
+                analysisStep={analysisStep}
+                logLines={logLines}
+              />
+            </div>
           </section>
 
           {/* Disclaimer: wyraźny w obu motywach */}
-          <p className="mt-3.5 text-center text-xs leading-5 text-zinc-600 dark:text-zinc-400">
+          <p className="mt-3.5 text-center text-xs leading-5 text-zinc-600 dark:text-zinc-400 break-words">
             {t.common.disclaimer}
           </p>
 
           {/* Panel raportu wynikowego */}
           {(hasResult || isAnalyzing) && (
-            <ReportView
-              t={t}
-              scoreLabel={scoreLabel}
-              claimText={claimText}
-              activeClaim={activeClaim}
-              setActiveClaim={setActiveClaim}
-              activeFilter={activeFilter}
-              setActiveFilter={setActiveFilter}
-              copyCard={copyCard}
-              copied={copied}
-              exportDossier={exportDossier}
-              exported={exported}
-              investigation={activeInvestigation}
-              onOpenDossier={() => setDossierOpen(true)}
-            />
+            <div className="w-full min-w-0 max-w-full">
+              <ReportView
+                t={t}
+                scoreLabel={scoreLabel}
+                claimText={claimText}
+                activeClaim={activeClaim}
+                setActiveClaim={setActiveClaim}
+                activeFilter={activeFilter}
+                setActiveFilter={setActiveFilter}
+                copyCard={copyCard}
+                copied={copied}
+                exportDossier={exportDossier}
+                exported={exported}
+                investigation={activeInvestigation}
+                onOpenDossier={() => setDossierOpen(true)}
+              />
+            </div>
           )}
         </div>
 
