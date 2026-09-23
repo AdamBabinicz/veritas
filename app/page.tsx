@@ -25,10 +25,11 @@ import { ReportView, type LoadedInvestigation } from "@/components/report-view";
 import { ScrollToTop } from "@/components/scroll-to-top";
 
 export default function Page() {
+  const [mounted, setMounted] = useState(false);
   const [locale, setLocale] = useState<Locale>("en");
   const [dark, setDark] = useState(true);
   const [input, setInput] = useState<string>(
-    getDictionary("en").claims[0].text,
+    () => getDictionary("en").claims[0].text,
   );
   const [activeTab, setActiveTab] = useState(0);
   const [activeClaim, setActiveClaim] = useState(1);
@@ -62,7 +63,19 @@ export default function Page() {
     useState<LoadedInvestigation | null>(null);
   const [dossierOpen, setDossierOpen] = useState(false);
 
-  const t = getDictionary(locale);
+  // Bezpieczna inicjalizacja po stronie klienta: eliminuje hydration mismatch w dev
+  useEffect(() => {
+    setMounted(true);
+    try {
+      const saved = window.localStorage.getItem("veritasai-consent");
+      if (saved) {
+        setConsent(JSON.parse(saved));
+        setConsentSeen(true);
+      }
+    } catch {
+      // ignorujemy błędy parsowania
+    }
+  }, []);
 
   // Synchronizacja motywu dark z elementem <html>
   useEffect(() => {
@@ -74,6 +87,8 @@ export default function Page() {
       }
     }
   }, [dark]);
+
+  const t = getDictionary(locale);
 
   const loadRepositoryClaim = (investigation: LoadedInvestigation) => {
     setActiveInvestigation(investigation);
@@ -106,40 +121,30 @@ export default function Page() {
         : t.score.fabricated;
 
   const selectLocale = (next: Locale) => {
-    console.log("[VeritasAI] Switching locale to:", next);
     setLocale(next);
     setInput(getDictionary(next).claims[0].text);
   };
 
   const toggleTheme = () => {
-    console.log("[VeritasAI] Toggling dark mode to:", !dark);
     setDark((prev) => !prev);
   };
 
-  useEffect(() => {
-    const saved = window.localStorage.getItem("veritasai-consent");
-    if (saved) {
-      try {
-        setConsent(JSON.parse(saved));
-        setConsentSeen(true);
-      } catch {
-        // fallback dla błędnego json
-      }
-    }
-  }, []);
-
   function saveConsent(next = consent) {
-    window.localStorage.setItem("veritasai-consent", JSON.stringify(next));
-    window.dispatchEvent(
-      new CustomEvent("veritasai-consent-update", { detail: next }),
-    );
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("veritasai-consent", JSON.stringify(next));
+      window.dispatchEvent(
+        new CustomEvent("veritasai-consent-update", { detail: next }),
+      );
+    }
     setConsent(next);
     setConsentSeen(true);
     setConsentOpen(false);
   }
 
   function purgeSession() {
-    window.localStorage.removeItem("veritasai-consent");
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem("veritasai-consent");
+    }
     setConsent({ analytics: false, ai: false, marketing: false, deep: false });
     setPurged(true);
   }
@@ -458,8 +463,8 @@ export default function Page() {
           onOpenGovernance={() => setGovernanceOpen(true)}
         />
 
-        {/* Modale */}
-        {!consentSeen && (
+        {/* Modale - renderowane po zamontowaniu na kliencie, bez ryzyka rozbieżności z SSR */}
+        {mounted && !consentSeen && (
           <ConsentBanner
             t={t}
             onAccept={() =>
