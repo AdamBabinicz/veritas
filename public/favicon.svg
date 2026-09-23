@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512"><metadata><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/"><rdf:Description><dc:creator>RealFaviconGenerator</dc:creator><dc:source>https://realfavicongenerator.net</dc:source></rdf:Description></rdf:RDF></metadata><defs>
+    <linearGradient id="plate" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#111114"></stop>
+      <stop offset="1" stop-color="#09090B"></stop>
+    </linearGradient>
+
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#10B981" stop-opacity="0.34"></stop>
+      <stop offset="0.55" stop-color="#10B981" stop-opacity="0.12"></stop>
+      <stop offset="1" stop-color="#10B981" stop-opacity="0"></stop>
+    </radialGradient>
+
+    <linearGradient id="emerald" x1="0.1" y1="0" x2="0.95" y2="1">
+      <stop offset="0" stop-color="#34D399"></stop>
+      <stop offset="0.55" stop-color="#10B981"></stop>
+      <stop offset="1" stop-color="#10B981"></stop>
+    </linearGradient>
+
+    <linearGradient id="facet" x1="0" y1="0" x2="1" y2="0.8">
+      <stop offset="0" stop-color="#6EE7B7" stop-opacity="0.40"></stop>
+      <stop offset="1" stop-color="#10B981" stop-opacity="0.06"></stop>
+    </linearGradient>
+
+    <mask id="knock">
+      <rect x="0" y="0" width="512" height="512" fill="#ffffff"></rect>
+      <path d="M180 250 L232 302 L338 188" fill="none" stroke="#000000" stroke-width="46" stroke-linecap="square" stroke-linejoin="miter"></path>
+    </mask>
+  </defs><rect x="0" y="0" width="512" height="512" rx="112" ry="112" fill="url(#plate)"></rect><rect x="0" y="0" width="512" height="512" rx="112" ry="112" fill="url(#glow)"></rect><g mask="url(#knock)">
+    <path d="M256 100 L390 148 L390 254 C390 336 332 388 256 412 C180 388 122 336 122 254 L122 148 Z" fill="url(#emerald)"></path>
+    <path d="M256 100 L390 148 L390 254 C390 336 332 388 256 412 Z" fill="url(#facet)"></path>
+  </g><path d="M256 100 L390 148 L390 254 C390 336 332 388 256 412 C180 388 122 336 122 254 L122 148 Z" fill="none" stroke="#34D399" stroke-width="14" stroke-linejoin="miter"></path></svg>
