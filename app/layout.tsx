@@ -173,15 +173,47 @@ export default function RootLayout({
         />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 
-        {/* Czysty Google Tag Manager - zarządza GA4 i wszystkimi tagami bez dublowania kodu */}
-        <Script id="google-tag-manager" strategy="lazyOnload">
+        {/* Inicjalizacja dataLayer od razu, by nic nie uciekło */}
+        <Script id="gtm-datalayer-init" strategy="beforeInteractive">
+          {`window.dataLayer = window.dataLayer || [];`}
+        </Script>
+
+        {/* Ładowanie skryptu GTM z pełną ochroną LCP (requestIdleCallback + zdarzenia) */}
+        <Script id="google-tag-manager" strategy="afterInteractive">
           {`
-            window.dataLayer = window.dataLayer || [];
-            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','${GTM_ID}');
+            (function() {
+              function loadGTM() {
+                if (window.__gtmLoaded) return;
+                window.__gtmLoaded = true;
+                window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+                var f = document.getElementsByTagName('script')[0];
+                var j = document.createElement('script');
+                j.async = true;
+                j.src = 'https://www.googletagmanager.com/gtm.js?id=${GTM_ID}';
+                f.parentNode.insertBefore(j, f);
+              }
+
+              if (document.readyState === 'complete') {
+                if ('requestIdleCallback' in window) {
+                  window.requestIdleCallback(loadGTM, { timeout: 2500 });
+                } else {
+                  setTimeout(loadGTM, 2000);
+                }
+              } else {
+                window.addEventListener('load', function() {
+                  if ('requestIdleCallback' in window) {
+                    window.requestIdleCallback(loadGTM, { timeout: 2500 });
+                  } else {
+                    setTimeout(loadGTM, 2000);
+                  }
+                });
+              }
+
+              // Jeśli użytkownik wykona interakcję wcześniej, ładujemy od razu
+              ['scroll', 'touchstart', 'mousemove', 'click'].forEach(function(e) {
+                window.addEventListener(e, loadGTM, { once: true, passive: true });
+              });
+            })();
           `}
         </Script>
       </head>
