@@ -74,7 +74,7 @@ export function ReportView({
   return (
     <section
       aria-labelledby="report-section-heading"
-      className="mt-5 rounded-2xl border border-border bg-card shadow-xs"
+      className="mt-5 rounded-2xl border border-border bg-card shadow-xs overflow-hidden"
     >
       {/* Pasek nagłówkowy raportu z akcjami */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border px-5 py-4">
@@ -158,11 +158,12 @@ export function ReportView({
               />
             </svg>
 
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-              <span className="text-4xl font-extrabold tracking-tight text-foreground">
+            {/* Wyśrodkowana etykieta z restrykcyjnym max-w, która idealnie mieści się w pierścieniu */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-2">
+              <span className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground leading-none">
                 {score}%
               </span>
-              <span className="mt-0.5 text-xs font-bold text-emerald-800 dark:text-emerald-400">
+              <span className="mt-1 max-w-[105px] px-1 text-[11px] font-bold leading-tight text-emerald-800 dark:text-emerald-400 break-words text-center">
                 {scoreLabel}
               </span>
             </div>
@@ -258,11 +259,11 @@ export function ReportView({
         {/* Kolumna 3: Karta dossier z ugruntowanymi źródłami Tavily */}
         <div className="rounded-xl border border-border bg-muted/40 p-4 flex flex-col justify-between">
           <div>
-            <div className="mb-3 flex items-center justify-between">
+            <div className="mb-3 flex items-center justify-between gap-2">
               <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-600 dark:text-zinc-300">
                 {t.report.dossier}
               </span>
-              <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold text-amber-900 dark:text-amber-300 border border-amber-500/30">
+              <span className="shrink-0 rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold text-amber-900 dark:text-amber-300 border border-amber-500/30">
                 {t.report.context}
               </span>
             </div>

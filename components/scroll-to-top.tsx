@@ -41,9 +41,9 @@ export function ScrollToTop({ t }: ScrollToTopProps) {
       aria-label={label}
       title={label}
       onClick={scrollToTop}
-      className="fixed bottom-6 right-6 z-40 flex size-10 items-center justify-center rounded-xl border border-border bg-card/90 text-foreground shadow-lg shadow-black/10 backdrop-blur-md transition-all hover:border-emerald-500/60 hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400 active:scale-95 cursor-pointer animate-in fade-in zoom-in-75 duration-200"
+      className="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-40 flex size-9 sm:size-10 items-center justify-center rounded-xl border border-border/80 bg-card/80 text-foreground shadow-md backdrop-blur-md transition-all hover:border-emerald-500/60 hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400 active:scale-95 cursor-pointer animate-in fade-in zoom-in-75 duration-200"
     >
-      <ArrowUp className="size-4 stroke-[2.5]" />
+      <ArrowUp className="size-3.5 sm:size-4 stroke-[2.5]" />
     </button>
   );
 }
