@@ -153,14 +153,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
-      <head>
-        <meta charSet="utf-8" />
+      <body
+        className="min-h-screen bg-background text-foreground antialiased selection:bg-emerald-500/20"
+        suppressHydrationWarning
+      >
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-      </head>
-      <body className="min-h-screen bg-background text-foreground antialiased selection:bg-emerald-500/20">
         {children}
       </body>
     </html>
