@@ -173,49 +173,12 @@ export default function RootLayout({
         />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 
-        {/* Inicjalizacja dataLayer od razu, by nic nie uciekło */}
-        <Script id="gtm-datalayer-init" strategy="beforeInteractive">
-          {`window.dataLayer = window.dataLayer || [];`}
-        </Script>
-
-        {/* Ładowanie skryptu GTM z pełną ochroną LCP (requestIdleCallback + zdarzenia) */}
-        <Script id="google-tag-manager" strategy="afterInteractive">
-          {`
-            (function() {
-              function loadGTM() {
-                if (window.__gtmLoaded) return;
-                window.__gtmLoaded = true;
-                window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
-                var f = document.getElementsByTagName('script')[0];
-                var j = document.createElement('script');
-                j.async = true;
-                j.src = 'https://www.googletagmanager.com/gtm.js?id=${GTM_ID}';
-                f.parentNode.insertBefore(j, f);
-              }
-
-              if (document.readyState === 'complete') {
-                if ('requestIdleCallback' in window) {
-                  window.requestIdleCallback(loadGTM, { timeout: 2500 });
-                } else {
-                  setTimeout(loadGTM, 2000);
-                }
-              } else {
-                window.addEventListener('load', function() {
-                  if ('requestIdleCallback' in window) {
-                    window.requestIdleCallback(loadGTM, { timeout: 2500 });
-                  } else {
-                    setTimeout(loadGTM, 2000);
-                  }
-                });
-              }
-
-              // Jeśli użytkownik wykona interakcję wcześniej, ładujemy od razu
-              ['scroll', 'touchstart', 'mousemove', 'click'].forEach(function(e) {
-                window.addEventListener(e, loadGTM, { once: true, passive: true });
-              });
-            })();
-          `}
-        </Script>
+        {/* JSON-LD w sekcji HEAD - zapobiega błędom hydracji w body */}
+        <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </head>
       <body
         className="min-h-screen w-full overflow-x-hidden bg-background text-foreground antialiased selection:bg-emerald-500/20"
@@ -230,11 +193,20 @@ export default function RootLayout({
           />
         </noscript>
 
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
         {children}
+
+        {/* Czysty, w pełni bezpieczny dla hydracji skrypt GTM z lazyOnload */}
+        <Script id="google-tag-manager" strategy="lazyOnload">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+            var f = document.getElementsByTagName('script')[0];
+            var j = document.createElement('script');
+            j.async = true;
+            j.src = 'https://www.googletagmanager.com/gtm.js?id=${GTM_ID}';
+            f.parentNode.insertBefore(j, f);
+          `}
+        </Script>
       </body>
     </html>
   );
