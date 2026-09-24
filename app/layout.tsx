@@ -161,6 +161,8 @@ const jsonLd = {
   ],
 };
 
+const gtmScript = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -168,16 +170,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body
         className="min-h-screen w-full overflow-x-hidden bg-background text-foreground antialiased selection:bg-emerald-500/20"
         suppressHydrationWarning
       >
-        <script
-          type="application/ld+json"
-          suppressHydrationWarning
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-
         <noscript>
           <iframe
             src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
@@ -189,18 +191,12 @@ export default function RootLayout({
 
         {children}
 
-        {/* Czyste, asynchroniczne ładowanie GTM po hydracji */}
-        <Script id="google-tag-manager" strategy="lazyOnload">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
-            var f = document.getElementsByTagName('script')[0];
-            var j = document.createElement('script');
-            j.async = true;
-            j.src = 'https://www.googletagmanager.com/gtm.js?id=${GTM_ID}';
-            f.parentNode.insertBefore(j, f);
-          `}
-        </Script>
+        {/* Prawidłowo zserializowany skrypt GTM bez błędów składniowych w audytorach */}
+        <Script
+          id="google-tag-manager"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{ __html: gtmScript }}
+        />
       </body>
     </html>
   );
