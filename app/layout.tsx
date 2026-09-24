@@ -161,7 +161,6 @@ const jsonLd = {
   ],
 };
 
-// Czysty, bezbłędny dla audytorów (brak '{' w inline) i nieblokujący LCP skrypt ładowany w idle
 const gtmLoaderScript = `
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
@@ -186,28 +185,27 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-      </head>
       <body
         className="min-h-screen w-full overflow-x-hidden bg-background text-foreground antialiased selection:bg-emerald-500/20"
         suppressHydrationWarning
       >
+        <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+
         <noscript>
           <iframe
             src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
             height="0"
             width="0"
-            style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
 
         {children}
 
-        {/* Ładowanie w bezczynności (idle) – nie blokuje renderowania LCP i nie psuje wyniku Mobile */}
+        {/* Ładowanie w idle bez blokowania renderowania i bez błędu hydracji */}
         <Script
           id="google-tag-manager"
           strategy="lazyOnload"
