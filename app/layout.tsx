@@ -12,12 +12,12 @@ export const viewport: Viewport = {
   themeColor: "#09090b",
 };
 
-// Dokładnie 50 znaków
-const metaTitle = "VeritasAI – Autonomous Real-Time Truth Intelligence";
+// Optymalna długość pod SEO – zawiera: "claims", "peer-reviewed", "study", "evidence"
+const metaTitle = "VeritasAI – Verify Claims with Peer-Reviewed Study Evidence";
 
-// Dokładnie 150 znaków
+// Dokładnie 159 znaków – zawiera: "claims", "evidence", "peer-reviewed", "study"
 const metaDescription =
-  "Autonomous truth synthesis console. Real-time claims verification grounded by NVIDIA Nemotron-70B on Nebius and Tavily Search with calibrated dossiers.";
+  "Autonomous truth intelligence console. Verify viral claims and news against real-time peer-reviewed study evidence using calibrated NVIDIA Nemotron reasoning.";
 
 export const metadata: Metadata = {
   title: metaTitle,
@@ -29,6 +29,9 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
   keywords: [
     "VeritasAI",
+    "Verify Claims",
+    "Peer-Reviewed Evidence",
+    "Study Verification",
     "NVIDIA Nemotron",
     "Llama-3.1-Nemotron-70B",
     "Nebius Token Factory",

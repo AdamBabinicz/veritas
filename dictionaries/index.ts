@@ -81,13 +81,13 @@ export const translations = {
       title: "Separate signal",
       titleMuted: "from the noise.",
       description:
-        "Deploy an autonomous research agent to deconstruct claims, ground them in real-time evidence, and surface the truth behind the headline.",
+        "Deploy an autonomous research agent to deconstruct claims, verify them against peer-reviewed study evidence in real time, and surface the truth behind the headline.",
       status: "System status",
       operational: "All systems operational",
       metrics: ["claims checked", "uptime", "avg. response"],
     },
     dispatch: {
-      title: "Dispatch a verification",
+      title: "Dispatch a claims & study verification",
       average: "avg. analysis 8–12 sec",
       tabs: ["Paste text", "Input URL", "Social post"],
       urlPlaceholder: "Paste an article URL to investigate…",
@@ -136,7 +136,7 @@ export const translations = {
       ],
     },
     pipeline: {
-      title: "Agent pipeline",
+      title: "Autonomous evidence & claims pipeline",
       running: "RUNNING",
       ready: "READY",
       steps: [
