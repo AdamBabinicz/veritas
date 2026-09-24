@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   Check,
   Cookie,
   ExternalLink,
   FileText,
+  Globe,
+  Link2,
   LockKeyhole,
   Settings,
   ShieldCheck,
@@ -14,6 +16,15 @@ import {
 import type { Dictionary } from "@/dictionaries";
 
 export function sourceUrl(label: string): string {
+  if (label.includes(" · ")) {
+    const after = label.split(" · ")[1]?.trim();
+    if (
+      after &&
+      (after.startsWith("http://") || after.startsWith("https://"))
+    ) {
+      return after;
+    }
+  }
   if (label.startsWith("http://") || label.startsWith("https://")) {
     return label;
   }
@@ -21,6 +32,8 @@ export function sourceUrl(label: string): string {
   if (normalized.includes("pubmed")) return "https://pubmed.ncbi.nlm.nih.gov";
   if (normalized.includes("reuters"))
     return "https://www.reuters.com/fact-check";
+  if (normalized.includes("onet")) return "https://www.onet.pl";
+  if (normalized.includes("wp.pl")) return "https://www.wp.pl";
   if (normalized.includes("cdc")) return "https://www.cdc.gov";
   if (normalized.includes("sec")) return "https://www.sec.gov/edgar";
   if (normalized.includes("bloomberg")) return "https://www.bloomberg.com";
@@ -456,9 +469,53 @@ export function DossierModal({
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (numericScore / 100) * circumference;
 
+  const isUrl =
+    record.title.startsWith("http://") ||
+    record.title.startsWith("https://") ||
+    record.title.startsWith("www.");
+
+  // Wydobycie czytelnego tytułu artykułu zamiast surowego adresu URL
+  const cleanTitle = useMemo(() => {
+    if (!isUrl) return record.title;
+
+    // 1. Sprawdź, czy w pierwszym źródle Tavily znajduje się nagłówek artykułu
+    const firstSource = record.sources?.[0];
+    if (firstSource && firstSource.includes(" · ")) {
+      const extracted = firstSource.split(" · ")[0].trim();
+      if (extracted && !extracted.startsWith("http")) {
+        return extracted;
+      }
+    }
+
+    // 2. Fallback: odkoduj slug z URL
+    try {
+      const urlObj = new URL(
+        record.title.startsWith("http")
+          ? record.title
+          : `https://${record.title}`,
+      );
+      const segments = urlObj.pathname.split("/").filter(Boolean);
+      const lastSlug = segments[segments.length - 1] || "";
+      const cleaned = decodeURIComponent(lastSlug)
+        .replace(/[,_]/g, " ")
+        .replace(/-/g, " ")
+        .replace(/\.[a-z0-9]+$/i, "")
+        .replace(/\b[0-9a-f]{6,}\b/gi, "")
+        .trim();
+
+      if (cleaned.length > 8) {
+        return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+      }
+    } catch {
+      // ignorujemy
+    }
+
+    return record.title;
+  }, [record.title, isUrl, record.sources]);
+
   return (
     <ModalShell
-      title={t.nav.repository}
+      title={t.report.dossier || "Dossier dowodowe"}
       icon={<ShieldCheck className="size-4 text-emerald-500" />}
       onClose={onClose}
       footer={
@@ -490,9 +547,29 @@ export function DossierModal({
               {record.status}
             </span>
           </div>
-          <h2 className="text-2xl font-bold tracking-tight text-foreground">
-            {record.title}
+
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground leading-snug">
+            {cleanTitle}
           </h2>
+
+          {isUrl && (
+            <div className="mt-2">
+              <a
+                href={
+                  record.title.startsWith("http")
+                    ? record.title
+                    : `https://${record.title}`
+                }
+                target="_blank"
+                rel="noreferrer noopener"
+                className="inline-flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 hover:underline font-mono bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-lg"
+              >
+                <Globe className="size-3" />
+                <span className="max-w-[400px] truncate">{record.title}</span>
+                <ExternalLink className="size-3" />
+              </a>
+            </div>
+          )}
         </div>
 
         {/* Dynamiczny pierścień zaufania w SVG */}
@@ -549,7 +626,7 @@ export function DossierModal({
             {t.report.claim}
           </p>
           <p className="rounded-xl border border-border bg-muted/20 p-4 text-xs leading-relaxed text-foreground">
-            {record.excerpt}
+            {cleanTitle}
           </p>
         </div>
 
@@ -567,28 +644,33 @@ export function DossierModal({
             {t.views.groundedSources}
           </p>
           <div className="space-y-2">
-            {record.sources.map((source) => (
-              <a
-                href={sourceUrl(source)}
-                target="_blank"
-                rel="noopener noreferrer"
-                key={source}
-                className="flex items-center justify-between rounded-xl border border-border bg-background/80 px-3.5 py-3 text-xs transition-colors hover:border-emerald-500/50 hover:bg-muted/30"
-              >
-                <span className="flex items-center gap-2 truncate pr-2">
-                  <span className="rounded-md border border-emerald-500/20 bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-400">
-                    {source.split(" ")[0]}
+            {record.sources.map((source) => {
+              const url = sourceUrl(source);
+              const displayLabel = source.includes(" · ")
+                ? source.split(" · ")[0]
+                : source;
+
+              return (
+                <a
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  key={source}
+                  className="flex items-center justify-between rounded-xl border border-border bg-background/80 px-3.5 py-3 text-xs transition-colors hover:border-emerald-500/50 hover:bg-muted/30 cursor-pointer"
+                >
+                  <span className="flex items-center gap-2 truncate pr-2">
+                    <Link2 className="size-3 text-emerald-500 shrink-0" />
+                    <span className="truncate font-medium text-foreground">
+                      {displayLabel}
+                    </span>
                   </span>
-                  <span className="truncate font-medium text-foreground">
-                    {source}
+                  <span className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-400 shrink-0">
+                    <span>Otwórz</span>
+                    <ExternalLink className="size-3" />
                   </span>
-                </span>
-                <span className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-400 shrink-0">
-                  <span>94%</span>
-                  <ExternalLink className="size-3" />
-                </span>
-              </a>
-            ))}
+                </a>
+              );
+            })}
           </div>
         </div>
       </div>

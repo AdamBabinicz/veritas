@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Check } from "lucide-react";
 import { getDictionary, type Locale } from "@/dictionaries";
 import { metricValues, score as defaultScore } from "@/lib/demo-data";
@@ -28,10 +28,15 @@ export default function Page() {
   const [mounted, setMounted] = useState(false);
   const [locale, setLocale] = useState<Locale>("en");
   const [dark, setDark] = useState(true);
-  const [input, setInput] = useState<string>(
-    () => getDictionary("en").claims[0].text,
+
+  // Buforowane stany dla każdej z 3 zakładek (tekst / URL / post społecznościowy)
+  const [textInput, setTextInput] = useState<string>(
+    () => getDictionary("en").claims[0]?.text ?? "",
   );
-  const [activeTab, setActiveTab] = useState(0);
+  const [urlInput, setUrlInput] = useState<string>("");
+  const [socialInput, setSocialInput] = useState<string>("");
+
+  const [activeTab, setActiveTab] = useState<number>(0);
   const [activeClaim, setActiveClaim] = useState(1);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [hasResult, setHasResult] = useState(true);
@@ -54,7 +59,7 @@ export default function Page() {
   const [activeView, setActiveView] = useState(0);
   const [analysisStep, setAnalysisStep] = useState(-1);
   const [logLines, setLogLines] = useState<string[]>([]);
-  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string>("");
   const [domain, setDomain] = useState(0);
   const [socialPlatform, setSocialPlatform] = useState("X / Twitter");
   const [exported, setExported] = useState(false);
@@ -72,7 +77,7 @@ export default function Page() {
         setConsentSeen(true);
       }
     } catch {
-      // ignorujemy
+      // ignorujemy brak localStorage w specyficznych środowiskach
     }
   }, []);
 
@@ -86,22 +91,87 @@ export default function Page() {
     }
   }, [dark]);
 
-  const t = getDictionary(locale);
+  const t = useMemo(() => getDictionary(locale), [locale]);
+
+  // Aktywny input zależny od wybranej zakładki
+  const currentInput =
+    activeTab === 1 ? urlInput : activeTab === 2 ? socialInput : textInput;
+
+  const handleSetCurrentInput = (val: string) => {
+    if (activeTab === 1) {
+      setUrlInput(val);
+    } else if (activeTab === 2) {
+      setSocialInput(val);
+    } else {
+      setTextInput(val);
+    }
+  };
+
+  const handleTabChange = (nextTab: number) => {
+    setActiveTab(nextTab);
+    if (nextTab === 1 && !urlInput.trim()) {
+      const defaultSampleUrl =
+        t?.dispatch?.sampleUrl || "https://pubmed.ncbi.nlm.nih.gov/38215508/";
+      setUrlInput(defaultSampleUrl);
+    }
+  };
 
   const loadRepositoryClaim = (investigation: LoadedInvestigation) => {
     setActiveInvestigation(investigation);
-    setInput(investigation.claim);
+    setTextInput(investigation.claim);
+    setActiveTab(0);
     setDomain(investigation.domain);
     setActiveClaim(0);
     setActiveFilter(0);
     setActiveView(0);
     setHasResult(true);
     setDossierOpen(false);
+
+    setToastMessage(
+      locale === "pl"
+        ? "Załadowano sprawę z repozytorium"
+        : "Investigation loaded from repository",
+    );
+    window.setTimeout(() => setToastMessage(""), 3500);
+
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 200, behavior: "smooth" });
+    }
   };
 
-  const status = isAnalyzing ? t.pipeline.running : t.pipeline.ready;
+  // Obsługa przycisku „Załaduj do konsoli weryfikacji” z okna DossierModal
+  const handleLoadActiveToConsole = () => {
+    const textToLoad =
+      activeInvestigation?.title &&
+      !activeInvestigation.title.startsWith("http")
+        ? activeInvestigation.title
+        : activeInvestigation?.claim || currentInput;
+
+    setTextInput(textToLoad);
+    setActiveTab(0);
+    setDossierOpen(false);
+    setActiveView(0);
+
+    setToastMessage(
+      locale === "pl"
+        ? "Załadowano treść do konsoli weryfikacji"
+        : "Claim loaded into verification console",
+    );
+    window.setTimeout(() => setToastMessage(""), 3500);
+
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 200, behavior: "smooth" });
+    }
+  };
+
+  const status = isAnalyzing
+    ? t?.pipeline?.running || "Analizowanie..."
+    : t?.pipeline?.ready || "Gotowy";
+
   const claimText =
-    activeInvestigation?.claim ?? (input.trim() || t.claims[0].text);
+    activeInvestigation?.claim ??
+    (currentInput.trim() || t?.claims?.[0]?.text || "Brak treści twierdzenia");
+
   const activeScore = activeInvestigation
     ? Number.parseInt(investigationScore(activeInvestigation.score), 10)
     : defaultScore;
@@ -113,14 +183,15 @@ export default function Page() {
 
   const scoreLabel =
     activeScore > 65
-      ? t.score.mostly
+      ? t?.score?.mostly || "W większości potwierdzone"
       : activeScore > 35
-        ? t.score.context
-        : t.score.fabricated;
+        ? t?.score?.context || "Wymaga kontekstu"
+        : t?.score?.fabricated || "Prawdopodobnie fałszywe";
 
   const selectLocale = (next: Locale) => {
     setLocale(next);
-    setInput(getDictionary(next).claims[0].text);
+    const nextDict = getDictionary(next);
+    setTextInput(nextDict?.claims?.[0]?.text || "");
   };
 
   const toggleTheme = () => {
@@ -148,35 +219,53 @@ export default function Page() {
   }
 
   async function runVerification() {
-    if (!input.trim() || isAnalyzing) return;
+    const claimToVerify = currentInput.trim();
+    if (!claimToVerify || isAnalyzing) return;
+
     setIsAnalyzing(true);
     setHasResult(false);
     setAnalysisStep(0);
-    setShowToast(false);
-    setLogLines([t.pipelineRuntime.init]);
+    setToastMessage("");
+    setLogLines([t?.pipelineRuntime?.init || "Inicjalizacja potoku..."]);
 
     const stepTimers = [
       window.setTimeout(() => {
         setAnalysisStep(1);
-        setLogLines((l) => [...l, t.pipelineRuntime.step1]);
+        setLogLines((l) => [
+          ...l,
+          t?.pipelineRuntime?.step1 ||
+            "Rozkład tekstu na atomowe twierdzenia...",
+        ]);
       }, 400),
       window.setTimeout(() => {
         setAnalysisStep(2);
-        setLogLines((l) => [...l, t.pipelineRuntime.step2]);
+        setLogLines((l) => [
+          ...l,
+          t?.pipelineRuntime?.step2 || "Zapytanie do źródeł Tavily...",
+        ]);
       }, 1000),
       window.setTimeout(() => {
         setAnalysisStep(3);
-        setLogLines((l) => [...l, t.pipelineRuntime.step3]);
+        setLogLines((l) => [
+          ...l,
+          t?.pipelineRuntime?.step3 || "Synteza wiarygodności źródeł...",
+        ]);
       }, 1700),
     ];
 
     try {
+      const mode =
+        activeTab === 1 ? "url" : activeTab === 2 ? "social" : "text";
+      const domainName = t?.dispatch?.domains?.[domain] || "General";
+
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          claim: input,
-          domain: t.dispatch.domains[domain],
+          claim: claimToVerify,
+          domain: domainName,
+          mode,
+          platform: activeTab === 2 ? socialPlatform : undefined,
         }),
       });
 
@@ -188,15 +277,19 @@ export default function Page() {
 
       const data = await response.json();
       const newInvestigation: LoadedInvestigation = {
-        title: input.length > 50 ? `${input.slice(0, 47)}...` : input,
-        claim: input,
+        title:
+          data.title ||
+          (claimToVerify.length > 50
+            ? `${claimToVerify.slice(0, 47)}...`
+            : claimToVerify),
+        claim: claimToVerify,
         score: String(data.score ?? 76),
-        status: data.status ?? t.views.verified,
-        analysis: data.analysis ?? t.report.dossierText,
+        status: data.status ?? t?.views?.verified ?? "Zweryfikowane",
+        analysis: data.analysis ?? t?.report?.dossierText ?? "Raport gotowy.",
         sources:
           Array.isArray(data.sources) && data.sources.length > 0
             ? data.sources
-            : Array.from(t.sourcesList),
+            : Array.from(t?.sourcesList || []),
         domain,
       };
 
@@ -204,20 +297,22 @@ export default function Page() {
       setAnalysisStep(4);
       setLogLines((l) => [
         ...l,
-        `${t.pipelineRuntime.complete} (${data.model ?? "NVIDIA Nemotron"})`,
-        t.pipelineRuntime.dossierReady,
+        `${t?.pipelineRuntime?.complete || "Zakończono"} (${
+          data.model ?? "NVIDIA Nemotron / Tavily"
+        })`,
+        t?.pipelineRuntime?.dossierReady || "Dossier gotowe do wglądu.",
       ]);
       setHasResult(true);
-      setShowToast(true);
-      window.setTimeout(() => setShowToast(false), 4200);
+      setToastMessage(t?.toast?.complete || "Analiza zakończona sukcesem");
+      window.setTimeout(() => setToastMessage(""), 4200);
     } catch {
       stepTimers.forEach(clearTimeout);
       setAnalysisStep(4);
       setHasResult(true);
       setLogLines((l) => [
         ...l,
-        t.pipelineRuntime.fallback,
-        t.pipelineRuntime.dossierReady,
+        t?.pipelineRuntime?.fallback || "Tryb awaryjny potoku.",
+        t?.pipelineRuntime?.dossierReady || "Dossier gotowe.",
       ]);
     } finally {
       setIsAnalyzing(false);
@@ -225,7 +320,7 @@ export default function Page() {
   }
 
   function copyCard() {
-    const prefix = t.exportReport?.cardCopyPrefix ?? "VeritasAI";
+    const prefix = t?.exportReport?.cardCopyPrefix ?? "VeritasAI";
     navigator.clipboard?.writeText(
       `${prefix} — ${activeScore}% ${scoreLabel}.`,
     );
@@ -236,20 +331,25 @@ export default function Page() {
   function exportDossier() {
     const dossierSources =
       activeInvestigation?.sources ??
-      t.sourcesList.map((source) => source.split(" · ")[0]);
+      (t?.sourcesList || []).map((source) => source.split(" · ")[0]);
     const dossierAnalysis =
-      activeInvestigation?.analysis ?? t.report.dossierText;
+      activeInvestigation?.analysis ?? t?.report?.dossierText ?? "";
 
     const reportHeader =
-      t.exportReport?.header ?? "VeritasAI Verification Report";
-    const generatedLabel = t.exportReport?.generated ?? "Generated";
-    const claimLabel = t.exportReport?.claim ?? "Claim";
-    const trustScoreLabel = t.exportReport?.trustScore ?? "Trust Score";
-    const verdictLabel = t.exportReport?.verdict ?? "Verdict";
-    const analysisLabel = t.exportReport?.analysis ?? "Analysis";
-    const sourcesLabel = t.exportReport?.sources ?? "Grounded Tavily Sources";
+      t?.exportReport?.header ?? "VeritasAI Verification Report";
+    const generatedLabel = t?.exportReport?.generated ?? "Generated";
+    const claimLabel = t?.exportReport?.claim ?? "Claim";
+    const trustScoreLabel = t?.exportReport?.trustScore ?? "Trust Score";
+    const verdictLabel = t?.exportReport?.verdict ?? "Verdict";
+    const analysisLabel = t?.exportReport?.analysis ?? "Analysis";
+    const sourcesLabel = t?.exportReport?.sources ?? "Grounded Tavily Sources";
+    const disclaimerText =
+      t?.common?.disclaimer ||
+      "Oceny VeritasAI są probabilistycznymi analizami AI i nie stanowią opinii prawnej.";
 
-    const reportContent = `${reportHeader}\n${generatedLabel}: ${new Date().toISOString()}\n\n${claimLabel}: ${claimText}\n${trustScoreLabel}: ${activeScore}%\n${verdictLabel}: ${scoreLabel}\n\n${analysisLabel}:\n${dossierAnalysis}\n\n${sourcesLabel}:\n${dossierSources.map((source) => `- ${source}`).join("\n")}\n\n${t.common.disclaimer}`;
+    const reportContent = `${reportHeader}\n${generatedLabel}: ${new Date().toISOString()}\n\n${claimLabel}: ${claimText}\n${trustScoreLabel}: ${activeScore}%\n${verdictLabel}: ${scoreLabel}\n\n${analysisLabel}:\n${dossierAnalysis}\n\n${sourcesLabel}:\n${dossierSources
+      .map((source) => `- ${source}`)
+      .join("\n")}\n\n${disclaimerText}`;
 
     const blob = new Blob([reportContent], {
       type: "text/plain;charset=utf-8",
@@ -267,9 +367,11 @@ export default function Page() {
   return (
     <main
       id="main-content"
-      className={`${dark ? "dark" : ""} min-h-screen w-full bg-background text-foreground selection:bg-emerald-500/20`}
+      className={`${
+        dark ? "dark" : ""
+      } min-h-screen w-full bg-background text-foreground selection:bg-emerald-500/20`}
     >
-      {/* Poprawny semantycznie nagłówek nadrzędny bez zagnieżdżania header w header */}
+      {/* Pasek nawigacyjny */}
       <header className="fixed top-0 left-0 right-0 z-50 w-full border-b border-border/80 bg-background/90 backdrop-blur-md transition-colors">
         <div className="mx-auto max-w-[1500px] w-full px-4 sm:px-6 lg:px-10">
           <Header
@@ -282,12 +384,15 @@ export default function Page() {
             setActiveView={setActiveView}
             menuOpen={menuOpen}
             setMenuOpen={setMenuOpen}
-            onSelectSample={(sampleText) => setInput(sampleText)}
+            onSelectSample={(sampleText) => {
+              setTextInput(sampleText);
+              setActiveTab(0);
+            }}
           />
         </div>
       </header>
 
-      {/* Kontener treści z marginesem górnym pt-[74px] odpowiadającym wysokości navbaru */}
+      {/* Kontener treści */}
       <div className="mx-auto max-w-[1500px] w-full min-w-0 px-4 pt-[74px] pb-16 sm:px-6 lg:px-10">
         {/* Widoki pomocnicze */}
         {activeView === 1 && (
@@ -299,11 +404,11 @@ export default function Page() {
                 const index = row.caseIndex;
                 const record: LoadedInvestigation = {
                   title: row.name,
-                  claim: t.claims[index]?.text ?? row.name,
+                  claim: t?.claims?.[index]?.text ?? row.name,
                   score: row.score,
                   status: row.status,
-                  analysis: t.report.dossierText,
-                  sources: Array.from(t.sourcesList),
+                  analysis: t?.report?.dossierText || "",
+                  sources: Array.from(t?.sourcesList || []),
                   domain: index === 1 ? 2 : index === 2 ? 1 : 0,
                 };
                 loadRepositoryClaim(record);
@@ -350,49 +455,58 @@ export default function Page() {
             <div className="min-w-0">
               <div className="mb-6 flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-400 break-words">
                 <span className="size-2 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse shrink-0" />
-                <span>{t.hero.eyebrow}</span>
+                <span>
+                  {t?.hero?.eyebrow || "AUTONOMICZNA KONSOLA WERYFIKACJI"}
+                </span>
                 <span className="text-zinc-400 dark:text-zinc-500">/</span>
-                <span>{t.hero.workspace}</span>
+                <span>{t?.hero?.workspace || "AKTYWNA PRZESTRZEŃ"}</span>
               </div>
               <h1 className="max-w-3xl text-4xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-6xl break-words">
-                {t.hero.title}
+                {t?.hero?.title || "Oddziel sygnał"}
                 <br />
                 <span className="text-zinc-500 dark:text-zinc-400 font-medium">
-                  {t.hero.titleMuted}
+                  {t?.hero?.titleMuted || "od szumu."}
                 </span>
               </h1>
               <p className="mt-5 max-w-xl text-sm leading-6 text-zinc-700 dark:text-zinc-300 font-normal break-words">
-                {t.hero.description}
+                {t?.hero?.description ||
+                  "Uruchom autonomicznego agenta badawczego, aby rozłożyć twierdzenia na czynniki pierwsze."}
               </p>
             </div>
 
             <div className="flex flex-col justify-end gap-3 rounded-2xl border border-border bg-card p-4 shadow-xs min-w-0">
               <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-zinc-600 dark:text-zinc-300">
-                <span>{t.hero.status}</span>
+                <span>{t?.hero?.status || "STATUS SYSTEMU"}</span>
                 <span className="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400">
                   <span className="size-2 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse shrink-0" />
-                  <span>{t.hero.operational}</span>
+                  <span>
+                    {t?.hero?.operational || "WSZYSTKIE SYSTEMY DZIAŁAJĄ"}
+                  </span>
                 </span>
               </div>
               <div className="grid grid-cols-3 gap-2 border-t border-border pt-3">
                 {metricValues.map((value, i) => (
-                  <Metric key={value} value={value} label={t.hero.metrics[i]} />
+                  <Metric
+                    key={value}
+                    value={value}
+                    label={t?.hero?.metrics?.[i] || ""}
+                  />
                 ))}
               </div>
             </div>
           </section>
 
-          {/* Główna sekcja operacyjna: div zamiast section, bo nie ma bezpośredniego h2 */}
+          {/* Główna sekcja operacyjna: Konsola i Śledzenie potoku */}
           <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_330px] w-full min-w-0">
             <div className="min-w-0 max-w-full">
               <DispatchConsole
                 t={t}
-                input={input}
-                setInput={setInput}
+                input={currentInput}
+                setInput={handleSetCurrentInput}
                 domain={domain}
                 setDomain={setDomain}
                 activeTab={activeTab}
-                setActiveTab={setActiveTab}
+                setActiveTab={handleTabChange}
                 socialPlatform={socialPlatform}
                 setSocialPlatform={setSocialPlatform}
                 isAnalyzing={isAnalyzing}
@@ -412,9 +526,10 @@ export default function Page() {
             </div>
           </div>
 
-          {/* Disclaimer: wyraźny w obu motywach */}
+          {/* Zastrzeżenie prawne */}
           <p className="mt-3.5 text-center text-xs leading-5 text-zinc-600 dark:text-zinc-400 break-words">
-            {t.common.disclaimer}
+            {t?.common?.disclaimer ||
+              "Oceny VeritasAI są probabilistycznymi analizami AI opartymi na otwartych źródłach webowych i nie stanowią opinii prawnej."}
           </p>
 
           {/* Panel raportu wynikowego */}
@@ -440,20 +555,20 @@ export default function Page() {
         </div>
 
         {/* Powiadomienie Toast */}
-        {showToast && (
+        {toastMessage && (
           <div
             role="status"
             className="fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-card px-4 py-3 text-xs font-semibold text-emerald-600 dark:text-emerald-400 shadow-2xl shadow-emerald-500/10 animate-in fade-in slide-in-from-bottom-2 duration-200"
           >
             <Check className="size-4 text-emerald-600 dark:text-emerald-400" />
-            <span>{t.toast.complete}</span>
+            <span>{toastMessage}</span>
           </div>
         )}
 
-        {/* Pływający przycisk przewijania do góry */}
+        {/* Pływający przycisk przewijania */}
         <ScrollToTop t={t} />
 
-        {/* Modularny Footer */}
+        {/* Stopka */}
         <Footer
           t={t}
           onOpenPrivacy={() => setLegalModal("privacy")}
@@ -502,21 +617,29 @@ export default function Page() {
           <DossierModal
             t={t}
             record={{
-              title: activeInvestigation?.title ?? t.claims[0].label,
+              title:
+                activeInvestigation?.title ??
+                t?.claims?.[0]?.label ??
+                "Śledztwo",
               tag: activeInvestigation?.title
-                ? t.common.activeCase
-                : t.views.tags[0],
+                ? (t?.common?.activeCase ?? "Aktywny raport")
+                : (t?.views?.tags?.[0] ?? "Zweryfikowano"),
               result: activeInvestigation?.score
                 ? `${activeInvestigation.score}%`
                 : `${defaultScore}%`,
-              status: activeInvestigation?.status ?? t.views.verified,
+              status:
+                activeInvestigation?.status ??
+                t?.views?.verified ??
+                "Zweryfikowano",
               excerpt: claimText,
-              analysis: activeInvestigation?.analysis ?? t.report.dossierText,
+              analysis:
+                activeInvestigation?.analysis ?? (t?.report?.dossierText || ""),
               sources:
-                activeInvestigation?.sources ?? Array.from(t.sourcesList),
+                activeInvestigation?.sources ??
+                Array.from(t?.sourcesList || []),
             }}
             onClose={() => setDossierOpen(false)}
-            onLoad={() => setDossierOpen(false)}
+            onLoad={handleLoadActiveToConsole}
           />
         )}
 

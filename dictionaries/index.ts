@@ -92,7 +92,7 @@ export const translations = {
       tabs: ["Paste text", "Input URL", "Social post"],
       urlPlaceholder: "Paste an article URL to investigate…",
       textPlaceholder: "Paste a claim, article, or social post…",
-      sampleUrl: "https://www.reuters.com/world/",
+      sampleUrl: "https://pubmed.ncbi.nlm.nih.gov/38215508/",
       socialPlatforms: ["X / Twitter", "Threads", "Facebook", "TikTok"],
       socialPlaceholder:
         "@handle or post URL (e.g. https://x.com/user/status/...)",
@@ -380,7 +380,7 @@ export const translations = {
       tabs: ["Wklej tekst", "Wprowadź URL", "Post społecznościowy"],
       urlPlaceholder: "Wklej URL artykułu do zbadania…",
       textPlaceholder: "Wklej twierdzenie, artykuł lub post…",
-      sampleUrl: "https://www.reuters.com/world/",
+      sampleUrl: "https://pubmed.ncbi.nlm.nih.gov/38215508/",
       socialPlatforms: ["X / Twitter", "Threads", "Facebook", "TikTok"],
       socialPlaceholder:
         "@nazwa_użytkownika lub URL wpisu (np. https://x.com/...)",
@@ -393,7 +393,7 @@ export const translations = {
       ],
       deploy: "Uruchom agenta weryfikacji",
       reasoning: "Agent analizuje…",
-      claims: "znaków",
+      claims: "twierdzeń",
       charCount: "znaków",
       jurySectionTitle: "Wzorcowe scenariusze weryfikacji:",
       juryPrompts: [
@@ -579,5 +579,5 @@ export const translations = {
 export type Dictionary = typeof translations.en;
 
 export const getDictionary = (locale: Locale): Dictionary => {
-  return (translations[locale] ?? translations.en) as Dictionary;
+  return (translations[locale] ?? translations.en) as unknown as Dictionary;
 };
