@@ -6,7 +6,6 @@ import {
   Check,
   ChevronDown,
   Clock3,
-  ExternalLink,
   FlaskConical,
   Globe,
   Link2,
@@ -100,7 +99,6 @@ export function DispatchConsole({
     }
   }, [externalActiveTab]);
 
-  // Zamykanie dropdownu po kliknięciu na zewnątrz
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -219,9 +217,11 @@ export function DispatchConsole({
         {tabs.map((tab, i) => (
           <button
             key={tab}
+            id={`dispatch-tab-${i}`}
             type="button"
             role="tab"
             aria-selected={currentTab === i}
+            aria-controls={`dispatch-tabpanel-${i}`}
             onClick={() => handleTabChange(i)}
             className={`rounded-t-lg px-4 py-2.5 text-xs font-semibold transition-colors cursor-pointer ${
               currentTab === i
@@ -236,243 +236,277 @@ export function DispatchConsole({
 
       <div className="p-5">
         {/* Zakładka 0: Wklej tekst */}
-        {currentTab === 0 && (
-          <div>
-            <textarea
-              aria-label={t?.dispatch?.textPlaceholder || "Wklej tekst"}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              className="min-h-[130px] w-full resize-none rounded-xl border border-border bg-background p-4 text-sm leading-6 text-foreground outline-none transition-colors placeholder:text-zinc-400 focus:border-emerald-500/60"
-              placeholder={
-                t?.dispatch?.textPlaceholder || "Wklej tekst do weryfikacji..."
-              }
-            />
+        <div
+          id="dispatch-tabpanel-0"
+          role="tabpanel"
+          aria-labelledby="dispatch-tab-0"
+          hidden={currentTab !== 0}
+        >
+          {currentTab === 0 && (
+            <div>
+              <textarea
+                aria-label={t?.dispatch?.textPlaceholder || "Wklej tekst"}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                className="min-h-[130px] w-full resize-none rounded-xl border border-border bg-background p-4 text-sm leading-6 text-foreground outline-none transition-colors placeholder:text-zinc-400 focus:border-emerald-500/60"
+                placeholder={
+                  t?.dispatch?.textPlaceholder ||
+                  "Wklej tekst do weryfikacji..."
+                }
+              />
 
-            <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <label htmlFor="domain-select" className="sr-only">
-                  {t?.dispatch?.selectDomainAria || "Wybierz kategorię domeny"}
-                </label>
-                <select
-                  id="domain-select"
-                  aria-label={
-                    t?.dispatch?.selectDomainAria || "Wybierz kategorię domeny"
-                  }
-                  value={domain}
-                  onChange={(e) => setDomain(Number(e.target.value))}
-                  className="rounded-lg border border-border bg-muted px-3 py-2 text-xs font-medium text-foreground outline-none cursor-pointer hover:border-border/90"
-                >
-                  {t?.dispatch?.domains?.map((item, i) => (
-                    <option
-                      key={item}
-                      value={i}
-                      className="bg-popover text-popover-foreground"
-                    >
-                      {item}
-                    </option>
-                  ))}
-                </select>
-                <span className="text-xs text-zinc-600 dark:text-zinc-300 font-medium">
-                  {input.length} / 10,000
-                </span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Zakładka 1: Wprowadź URL */}
-        {currentTab === 1 && (
-          <div className="space-y-3">
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 rounded-xl border border-border bg-background p-3">
-              <div className="flex items-center gap-2 flex-1 min-w-0">
-                <Link2 className="size-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
-                <input
-                  type="url"
-                  aria-label={
-                    t?.dispatch?.urlPlaceholder || "Wprowadź pełny adres URL"
-                  }
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  className="min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-zinc-400"
-                  placeholder={
-                    t?.dispatch?.urlPlaceholder ||
-                    "https://example.com/artykul-lub-post"
-                  }
-                />
-              </div>
-
-              <div className="flex items-center gap-2 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-border relative">
-                <button
-                  type="button"
-                  disabled={isFetchingUrl}
-                  onClick={handleFetchArticleContent}
-                  className="flex items-center gap-1.5 rounded-lg bg-emerald-500 dark:bg-emerald-400 px-3.5 py-2 text-xs font-semibold text-white dark:text-emerald-950 transition-colors hover:bg-emerald-600 dark:hover:bg-emerald-300 disabled:opacity-60 cursor-pointer"
-                >
-                  {isFetchingUrl ? (
-                    <LoaderCircle className="size-3.5 animate-spin" />
-                  ) : (
-                    <Globe className="size-3.5" />
-                  )}
-                  <span>
-                    {isFetchingUrl ? "Pobieranie treści..." : fetchArticleLabel}
-                  </span>
-                </button>
-
-                {/* Rozwijany przycisk demonstracyjny "Wzorcowy link" */}
-                <div className="relative" ref={dropdownRef}>
-                  <button
-                    type="button"
-                    onClick={() => setSamplesDropdownOpen((prev) => !prev)}
-                    className="flex items-center gap-1.5 rounded-lg border border-border bg-muted/80 px-2.5 py-2 text-xs font-semibold text-zinc-700 hover:bg-muted hover:text-foreground dark:text-zinc-200 transition-colors cursor-pointer"
-                    title="Wybierz wzorcowy artykuł do demonstracji weryfikacji"
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <label htmlFor="domain-select" className="sr-only">
+                    {t?.dispatch?.selectDomainAria ||
+                      "Wybierz kategorię domeny"}
+                  </label>
+                  <select
+                    id="domain-select"
+                    aria-label={
+                      t?.dispatch?.selectDomainAria ||
+                      "Wybierz kategorię domeny"
+                    }
+                    value={domain}
+                    onChange={(e) => setDomain(Number(e.target.value))}
+                    className="rounded-lg border border-border bg-muted px-3 py-2 text-xs font-medium text-foreground outline-none cursor-pointer hover:border-border/90"
                   >
-                    <FlaskConical className="size-3.5 text-emerald-600 dark:text-emerald-400" />
-                    <span>Wzorcowy link</span>
-                    <ChevronDown className="size-3 text-zinc-500" />
-                  </button>
-
-                  {samplesDropdownOpen && (
-                    <div className="absolute right-0 top-full mt-1.5 w-80 rounded-xl border border-border bg-popover p-2 shadow-xl z-50 animate-in fade-in zoom-in-95">
-                      <div className="px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider text-zinc-500 border-b border-border/60 mb-1">
-                        Wzorcowe scenariusze demonstracyjne (1-Click)
-                      </div>
-                      <div className="space-y-1">
-                        {sampleUrls.map((sample) => (
-                          <button
-                            key={sample.url}
-                            type="button"
-                            onClick={() => handleSelectSample(sample)}
-                            className="w-full text-left p-2 rounded-lg hover:bg-muted/70 transition-colors group cursor-pointer block"
-                          >
-                            <div className="flex items-center justify-between gap-1.5">
-                              <span className="text-xs font-bold text-foreground group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
-                                {sample.label}
-                              </span>
-                              <span
-                                className={`text-[10px] font-bold px-1.5 py-0.5 rounded border uppercase shrink-0 ${sample.tagColor}`}
-                              >
-                                {sample.tag}
-                              </span>
-                            </div>
-                            <p className="mt-0.5 text-[11px] text-zinc-600 dark:text-zinc-400 line-clamp-1">
-                              {sample.description}
-                            </p>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                    {t?.dispatch?.domains?.map((item, i) => (
+                      <option
+                        key={item}
+                        value={i}
+                        className="bg-popover text-popover-foreground"
+                      >
+                        {item}
+                      </option>
+                    ))}
+                  </select>
+                  <span className="text-xs text-zinc-600 dark:text-zinc-300 font-medium">
+                    {input.length} / 10,000
+                  </span>
                 </div>
               </div>
             </div>
+          )}
+        </div>
 
-            {/* Komunikat o statusie pobrania linku */}
-            {fetchSuccessMessage && (
-              <div className="flex items-center gap-2 text-xs text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-3 py-2 animate-in fade-in">
-                <Check className="size-3.5 shrink-0" />
-                <span className="truncate">{fetchSuccessMessage}</span>
-              </div>
-            )}
+        {/* Zakładka 1: Wprowadź URL */}
+        <div
+          id="dispatch-tabpanel-1"
+          role="tabpanel"
+          aria-labelledby="dispatch-tab-1"
+          hidden={currentTab !== 1}
+        >
+          {currentTab === 1 && (
+            <div className="space-y-3">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 rounded-xl border border-border bg-background p-3">
+                <div className="flex items-center gap-2 flex-1 min-w-0">
+                  <Link2 className="size-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                  <input
+                    type="url"
+                    aria-label={
+                      t?.dispatch?.urlPlaceholder || "Wprowadź pełny adres URL"
+                    }
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    className="min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-zinc-400"
+                    placeholder={
+                      t?.dispatch?.urlPlaceholder ||
+                      "https://example.com/artykul-lub-post"
+                    }
+                  />
+                </div>
 
-            <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <label htmlFor="domain-select-url" className="sr-only">
-                  {t?.dispatch?.selectDomainAria || "Wybierz kategorię domeny"}
-                </label>
-                <select
-                  id="domain-select-url"
-                  aria-label={
-                    t?.dispatch?.selectDomainAria || "Wybierz kategorię domeny"
-                  }
-                  value={domain}
-                  onChange={(e) => setDomain(Number(e.target.value))}
-                  className="rounded-lg border border-border bg-muted px-3 py-2 text-xs font-medium text-foreground outline-none cursor-pointer hover:border-border/90"
-                >
-                  {t?.dispatch?.domains?.map((item, i) => (
-                    <option
-                      key={item}
-                      value={i}
-                      className="bg-popover text-popover-foreground"
+                <div className="flex items-center gap-2 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-border relative">
+                  <button
+                    type="button"
+                    disabled={isFetchingUrl}
+                    onClick={handleFetchArticleContent}
+                    className="flex items-center gap-1.5 rounded-lg bg-emerald-500 dark:bg-emerald-400 px-3.5 py-2 text-xs font-semibold text-white dark:text-emerald-950 transition-colors hover:bg-emerald-600 dark:hover:bg-emerald-300 disabled:opacity-60 cursor-pointer"
+                  >
+                    {isFetchingUrl ? (
+                      <LoaderCircle className="size-3.5 animate-spin" />
+                    ) : (
+                      <Globe className="size-3.5" />
+                    )}
+                    <span>
+                      {isFetchingUrl
+                        ? "Pobieranie treści..."
+                        : fetchArticleLabel}
+                    </span>
+                  </button>
+
+                  {/* Rozwijany przycisk demonstracyjny "Wzorcowy link" */}
+                  <div className="relative" ref={dropdownRef}>
+                    <button
+                      type="button"
+                      aria-haspopup="true"
+                      aria-expanded={samplesDropdownOpen}
+                      onClick={() => setSamplesDropdownOpen((prev) => !prev)}
+                      className="flex items-center gap-1.5 rounded-lg border border-border bg-muted/80 px-2.5 py-2 text-xs font-semibold text-zinc-700 hover:bg-muted hover:text-foreground dark:text-zinc-200 transition-colors cursor-pointer"
+                      title="Wybierz wzorcowy artykuł do demonstracji weryfikacji"
                     >
-                      {item}
-                    </option>
-                  ))}
-                </select>
-                <span className="text-xs text-zinc-600 dark:text-zinc-300 font-medium">
-                  {input.length} / 10,000
-                </span>
+                      <FlaskConical className="size-3.5 text-emerald-600 dark:text-emerald-400" />
+                      <span>Wzorcowy link</span>
+                      <ChevronDown className="size-3 text-zinc-500" />
+                    </button>
+
+                    {samplesDropdownOpen && (
+                      <div className="absolute right-0 top-full mt-1.5 w-80 rounded-xl border border-border bg-popover p-2 shadow-xl z-50 animate-in fade-in zoom-in-95">
+                        <div className="px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider text-zinc-500 border-b border-border/60 mb-1">
+                          Wzorcowe scenariusze demonstracyjne (1-Click)
+                        </div>
+                        <div className="space-y-1">
+                          {sampleUrls.map((sample) => (
+                            <button
+                              key={sample.url}
+                              type="button"
+                              onClick={() => handleSelectSample(sample)}
+                              className="w-full text-left p-2 rounded-lg hover:bg-muted/70 transition-colors group cursor-pointer block"
+                            >
+                              <div className="flex items-center justify-between gap-1.5">
+                                <span className="text-xs font-bold text-foreground group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
+                                  {sample.label}
+                                </span>
+                                <span
+                                  className={`text-[10px] font-bold px-1.5 py-0.5 rounded border uppercase shrink-0 ${sample.tagColor}`}
+                                >
+                                  {sample.tag}
+                                </span>
+                              </div>
+                              <p className="mt-0.5 text-[11px] text-zinc-600 dark:text-zinc-400 line-clamp-1">
+                                {sample.description}
+                              </p>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Komunikat o statusie pobrania linku */}
+              {fetchSuccessMessage && (
+                <div className="flex items-center gap-2 text-xs text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-3 py-2 animate-in fade-in">
+                  <Check className="size-3.5 shrink-0" />
+                  <span className="truncate">{fetchSuccessMessage}</span>
+                </div>
+              )}
+
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <label htmlFor="domain-select-url" className="sr-only">
+                    {t?.dispatch?.selectDomainAria ||
+                      "Wybierz kategorię domeny"}
+                  </label>
+                  <select
+                    id="domain-select-url"
+                    aria-label={
+                      t?.dispatch?.selectDomainAria ||
+                      "Wybierz kategorię domeny"
+                    }
+                    value={domain}
+                    onChange={(e) => setDomain(Number(e.target.value))}
+                    className="rounded-lg border border-border bg-muted px-3 py-2 text-xs font-medium text-foreground outline-none cursor-pointer hover:border-border/90"
+                  >
+                    {t?.dispatch?.domains?.map((item, i) => (
+                      <option
+                        key={item}
+                        value={i}
+                        className="bg-popover text-popover-foreground"
+                      >
+                        {item}
+                      </option>
+                    ))}
+                  </select>
+                  <span className="text-xs text-zinc-600 dark:text-zinc-300 font-medium">
+                    {input.length} / 10,000
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Zakładka 2: Post społecznościowy */}
-        {currentTab === 2 && (
-          <div className="space-y-3 rounded-xl border border-border bg-background p-4">
-            <div className="flex flex-wrap gap-2">
-              {(
-                t?.dispatch?.socialPlatforms || [
-                  "X / Twitter",
-                  "Facebook",
-                  "TikTok",
-                ]
-              ).map((platform) => (
-                <button
-                  type="button"
-                  key={platform}
-                  onClick={() => setSocialPlatform?.(platform)}
-                  className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
-                    socialPlatform === platform
-                      ? "border-emerald-600/80 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300"
-                      : "border-border bg-card text-zinc-600 hover:text-foreground dark:text-zinc-300"
-                  }`}
-                >
-                  {platform}
-                </button>
-              ))}
-            </div>
-            <input
-              aria-label={t?.dispatch?.socialPlaceholder || "Wklej treść posta"}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              className="w-full rounded-lg border border-border bg-card p-3 text-sm text-foreground outline-none placeholder:text-zinc-400 focus:border-emerald-500/60"
-              placeholder={
-                t?.dispatch?.socialPlaceholder ||
-                "Wklej link lub treść posta..."
-              }
-            />
+        <div
+          id="dispatch-tabpanel-2"
+          role="tabpanel"
+          aria-labelledby="dispatch-tab-2"
+          hidden={currentTab !== 2}
+        >
+          {currentTab === 2 && (
+            <div className="space-y-3 rounded-xl border border-border bg-background p-4">
+              <div className="flex flex-wrap gap-2">
+                {(
+                  t?.dispatch?.socialPlatforms || [
+                    "X / Twitter",
+                    "Facebook",
+                    "TikTok",
+                  ]
+                ).map((platform) => (
+                  <button
+                    type="button"
+                    key={platform}
+                    onClick={() => setSocialPlatform?.(platform)}
+                    className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
+                      socialPlatform === platform
+                        ? "border-emerald-600/80 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300"
+                        : "border-border bg-card text-zinc-600 hover:text-foreground dark:text-zinc-300"
+                    }`}
+                  >
+                    {platform}
+                  </button>
+                ))}
+              </div>
+              <input
+                aria-label={
+                  t?.dispatch?.socialPlaceholder || "Wklej treść posta"
+                }
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                className="w-full rounded-lg border border-border bg-card p-3 text-sm text-foreground outline-none placeholder:text-zinc-400 focus:border-emerald-500/60"
+                placeholder={
+                  t?.dispatch?.socialPlaceholder ||
+                  "Wklej link lub treść posta..."
+                }
+              />
 
-            <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <label htmlFor="domain-select-social" className="sr-only">
-                  {t?.dispatch?.selectDomainAria || "Wybierz kategorię domeny"}
-                </label>
-                <select
-                  id="domain-select-social"
-                  aria-label={
-                    t?.dispatch?.selectDomainAria || "Wybierz kategorię domeny"
-                  }
-                  value={domain}
-                  onChange={(e) => setDomain(Number(e.target.value))}
-                  className="rounded-lg border border-border bg-muted px-3 py-2 text-xs font-medium text-foreground outline-none cursor-pointer hover:border-border/90"
-                >
-                  {t?.dispatch?.domains?.map((item, i) => (
-                    <option
-                      key={item}
-                      value={i}
-                      className="bg-popover text-popover-foreground"
-                    >
-                      {item}
-                    </option>
-                  ))}
-                </select>
-                <span className="text-xs text-zinc-600 dark:text-zinc-300 font-medium">
-                  {input.length} / 10,000
-                </span>
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <label htmlFor="domain-select-social" className="sr-only">
+                    {t?.dispatch?.selectDomainAria ||
+                      "Wybierz kategorię domeny"}
+                  </label>
+                  <select
+                    id="domain-select-social"
+                    aria-label={
+                      t?.dispatch?.selectDomainAria ||
+                      "Wybierz kategorię domeny"
+                    }
+                    value={domain}
+                    onChange={(e) => setDomain(Number(e.target.value))}
+                    className="rounded-lg border border-border bg-muted px-3 py-2 text-xs font-medium text-foreground outline-none cursor-pointer hover:border-border/90"
+                  >
+                    {t?.dispatch?.domains?.map((item, i) => (
+                      <option
+                        key={item}
+                        value={i}
+                        className="bg-popover text-popover-foreground"
+                      >
+                        {item}
+                      </option>
+                    ))}
+                  </select>
+                  <span className="text-xs text-zinc-600 dark:text-zinc-300 font-medium">
+                    {input.length} / 10,000
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Pasek z licznikiem znaków i głównym przyciskiem wysłania */}
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
